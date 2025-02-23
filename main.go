@@ -28,6 +28,7 @@ func loadEnv() {
 // createServer creates a new http.Server and returns a pointer to it
 func createServer(tokenization bool) *http.Server {
 	config.DBConnection()
+	config.MigrateDB()
 
 	mux := routes.InitRoutes()
 

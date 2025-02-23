@@ -16,6 +16,7 @@ type databaseConfig struct {
 	User     string
 	Password string
 	DBName   string
+	Schema   string
 }
 
 func ServiceConfig() *serviceConfig {
@@ -42,6 +43,7 @@ func DatabaseConfig() *databaseConfig {
 		User:     os.Getenv("DB_USER"),
 		Password: os.Getenv("DB_PASSWORD"),
 		DBName:   os.Getenv("DB_NAME"),
+		Schema:   os.Getenv("DB_SCHEMA"),
 	}
 
 	return values
