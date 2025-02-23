@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/joho/godotenv"
 	"github.com/ssssshel/sp-api/src/config"
 	"github.com/ssssshel/sp-api/src/middlewares"
+	"github.com/ssssshel/sp-api/src/routes"
 )
 
 type Env uint
@@ -21,28 +21,26 @@ const (
 
 func loadEnv() {
 	if err := godotenv.Load(".env"); err != nil {
-		fmt.Println("Error loading .env file: ", err)
+		log.Println("Error loading .env file: ", err)
 	}
 }
 
 // createServer creates a new http.Server and returns a pointer to it
 func createServer(tokenization bool) *http.Server {
+	config.DBConnection()
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello World"))
-	})
+	mux := routes.InitRoutes()
 
 	var handler http.Handler = mux
 	handler = middlewares.Cors(handler)
 	handler = middlewares.Logger(handler)
 
 	if tokenization {
-		println("Tokenization is enabled")
+		log.Println("Tokenization is enabled")
 	}
 
 	server := &http.Server{
-		Addr:    ":" + config.Env().Port,
+		Addr:    ":" + config.ServiceConfig().Port,
 		Handler: handler,
 	}
 	return server
@@ -56,19 +54,19 @@ func startServer(environment Env) {
 
 	switch environment {
 	case Development, Testing, DevelopmentWithoutTokens:
-		fmt.Println("Running in development/testing mode")
+		log.Println("Running in development/testing mode")
 	case Production:
-		fmt.Println("Running in production mode")
+		log.Println("Running in production mode")
 	}
 
 	tokenization := environment != DevelopmentWithoutTokens
 	server := createServer(tokenization)
 
-	fmt.Printf("Server running on port %s\n", config.Env().Port)
+	log.Printf("Server running on port %s\n", config.ServiceConfig().Port)
 	log.Fatal(server.ListenAndServe())
 }
 
 func main() {
 	loadEnv()
-	startServer(Env(config.Env().EnvCode))
+	startServer(Env(config.ServiceConfig().EnvCode))
 }
