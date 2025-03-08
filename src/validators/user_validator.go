@@ -4,6 +4,14 @@ import "github.com/go-playground/validator/v10"
 
 var validate = validator.New()
 
+type GetUserRequest struct {
+	ID uint64 `validate:"required"`
+}
+
+func ValidateGetUserRequest(request *GetUserRequest) error {
+	return validate.Struct(request)
+}
+
 // type CreateUserRequest struct {
 // 	Username string `json:"username" validate:"required"`
 // 	Email    string `json:"email" validate:"required"`
