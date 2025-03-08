@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type Report struct {
 	ID          uint64     `json:"id" gorm:"primaryKey"`
 	Description string     `json:"description" gorm:"type:varchar(100); not null"`
@@ -11,4 +13,7 @@ type Report struct {
 	Period      Period     `json:"period" gorm:"foreignKey:PeriodID"`
 	Content     string     `json:"content" gorm:"type:json; not null"`
 	Status      bool       `json:"status" gorm:"default:true"`
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }

@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type Table struct {
 	ID        uint64    `json:"id" gorm:"primaryKey"`
 	UserID    uint64    `json:"user_id" gorm:"not null"`
@@ -10,4 +12,7 @@ type Table struct {
 	Period    Period    `json:"period" gorm:"foreignKey:PeriodID"`
 	Amount    float64   `json:"amount" gorm:"type:decimal(10,2); not null"`
 	Status    bool      `json:"status" gorm:"default:true"`
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
