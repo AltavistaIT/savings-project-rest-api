@@ -8,6 +8,6 @@ type Currency struct {
 	Symbol      string `json:"symbol" gorm:"type:varchar(10); not null"`
 	Status      bool   `json:"status" gorm:"default:true"`
 
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
+	UpdatedAt time.Time `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP"`
 }

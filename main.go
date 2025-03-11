@@ -6,6 +6,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/ssssshel/sp-api/src/config"
+	"github.com/ssssshel/sp-api/src/database/migrations"
 	"github.com/ssssshel/sp-api/src/middlewares"
 	"github.com/ssssshel/sp-api/src/routes"
 )
@@ -28,7 +29,7 @@ func loadEnv() {
 // createServer creates a new http.Server and returns a pointer to it
 func createServer(tokenization bool) *http.Server {
 	config.DBConnection()
-	// config.MigrateDB()
+	migrations.MigrateDB()
 
 	mux := routes.InitRoutes()
 

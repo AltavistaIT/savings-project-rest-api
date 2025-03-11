@@ -3,9 +3,7 @@ package config
 import (
 	"fmt"
 	"log"
-	"reflect"
 
-	"github.com/ssssshel/sp-api/src/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -24,34 +22,4 @@ func DBConnection() {
 		log.Fatal("Error connecting to database => ", err)
 	}
 	log.Println("Database connection successful")
-}
-
-func MigrateDB() {
-	modelInstances := []interface{}{
-		models.TransactionType{},
-		models.ReportType{},
-		models.TableType{},
-		models.Currency{},
-		models.Period{},
-		models.User{},
-		models.Table{},
-		models.Transaction{},
-		models.Report{},
-		models.TableTransaction{},
-	}
-
-	validModels := []interface{}{}
-
-	for _, model := range modelInstances {
-		if reflect.TypeOf(model).Kind() == reflect.Struct {
-			validModels = append(validModels, model)
-		}
-	}
-
-	err := DBConn.AutoMigrate(validModels...)
-	if err != nil {
-		log.Fatal("Error migrating models => ", err)
-	}
-
-	log.Println("Models migrated successfully")
 }

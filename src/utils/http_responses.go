@@ -9,6 +9,7 @@ import (
 func HandleHttpError(w http.ResponseWriter, statusCode int, message string, err error) {
 	response := map[string]interface{}{
 		"message": message,
+		"error":   true,
 	}
 
 	if err != nil {
@@ -28,9 +29,17 @@ func HandleHttpSuccess(w http.ResponseWriter, statusCode int, message string, da
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 
-	json.NewEncoder(w).Encode(map[string]interface{}{
+	response := map[string]interface{}{
 		"message": message,
-		"data":    data,
 		"error":   nil,
-	})
+	}
+
+	if len(data) == 1 && data[0] != nil {
+		response["data"] = data[0]
+	}
+	if len(data) > 1 {
+		response["data"] = data
+	}
+
+	json.NewEncoder(w).Encode(response)
 }

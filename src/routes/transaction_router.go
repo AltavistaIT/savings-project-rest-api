@@ -7,7 +7,7 @@ import (
 )
 
 func TransactionRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("/transactions", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/api/transactions", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
 			controllers.GetTransactions(w, r)
@@ -16,7 +16,7 @@ func TransactionRoutes(mux *http.ServeMux) {
 		}
 	})
 
-	mux.HandleFunc("/transactions/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/api/transactions/", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
 			controllers.GetTransaction(w, r)

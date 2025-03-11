@@ -9,6 +9,6 @@ type TableTransaction struct {
 	TransactionID uint64      `json:"transaction_id" gorm:"not null"`
 	Transaction   Transaction `json:"transaction" gorm:"foreignKey:TransactionID"`
 
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
+	UpdatedAt time.Time `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP"`
 }
