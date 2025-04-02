@@ -12,11 +12,7 @@ func CreateTable(table *dto.CreateTableRequest) (*models.Table, error) {
 	db := config.DBConn
 
 	var existingTable models.Table
-	err := db.Where("user_id = ? AND type_id = ? AND month_year = ?", table.UserID, table.TypeID, table.MonthYear).First(&existingTable).Error
-
-	if err == nil {
-		return nil, err
-	}
+	db.Where("user_id = ? AND type_id = ? AND month_year = ?", table.UserID, table.TypeID, table.MonthYear).First(&existingTable)
 
 	if existingTable.ID != 0 {
 		return nil, errors.New("table already exists")
@@ -28,9 +24,7 @@ func CreateTable(table *dto.CreateTableRequest) (*models.Table, error) {
 		MonthYear: table.MonthYear,
 	}
 
-	err = db.Create(&tableModel).Error
-
-	if err != nil {
+	if err := db.Create(&tableModel).Error; err != nil {
 		return nil, err
 	}
 

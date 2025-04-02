@@ -11,9 +11,9 @@ import (
 
 func MigrateDB() {
 	modelInstances := []interface{}{
+		models.TableType{},
 		models.TransactionType{},
 		models.ReportType{},
-		models.TableType{},
 		models.Currency{},
 		models.User{},
 		models.Table{},
@@ -39,4 +39,5 @@ func MigrateDB() {
 
 	// Seeders
 	seeders.TableTypes()
+	seeders.TransactionTypes()
 }
