@@ -4,9 +4,13 @@ import (
 	"net/http"
 
 	"github.com/ssssshel/sp-api/src/presentation/http/handler"
+	router_table "github.com/ssssshel/sp-api/src/presentation/http/router/Table"
+	router_transaction "github.com/ssssshel/sp-api/src/presentation/http/router/Transaction"
+	router_user "github.com/ssssshel/sp-api/src/presentation/http/router/User"
+	"github.com/ssssshel/sp-api/src/shared"
 )
 
-func InitRoutes() *http.ServeMux {
+func InitRoutes(container *shared.Container) *http.ServeMux {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
@@ -14,7 +18,9 @@ func InitRoutes() *http.ServeMux {
 	})
 
 	apiMux := http.NewServeMux()
-	mux.Handle("/api/", apiMux)
+	router_table.TableRouter(apiMux, container)
+	router_transaction.TransactionRoutes(apiMux, container)
+	router_user.UserRoutes(apiMux, container)
 
 	mux.Handle("/api/", http.StripPrefix("/api/", apiMux))
 

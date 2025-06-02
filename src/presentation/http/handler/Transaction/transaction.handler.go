@@ -1,4 +1,4 @@
-package handler_table
+package handler_transaction
 
 import (
 	"encoding/json"
@@ -7,27 +7,27 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/ssssshel/sp-api/src/domain/models"
 	"github.com/ssssshel/sp-api/src/presentation/http/handler"
-	usecases_table "github.com/ssssshel/sp-api/src/usecases/Table"
+	usecases_transaction "github.com/ssssshel/sp-api/src/usecases/Transaction"
 )
 
-type TableHandler interface {
+type TransactionHandler interface {
 	Create(w http.ResponseWriter, r *http.Request)
 }
 
-type tableHandler struct {
-	createTableUsecase usecases_table.CreateTableUsecase
+type transactionHandler struct {
+	createTransactionUsecase usecases_transaction.CreateTransactionUsecase
 }
 
-func NewTableHandler(createTableUsecase usecases_table.CreateTableUsecase) TableHandler {
-	return &tableHandler{
-		createTableUsecase: createTableUsecase,
+func NewTransactionHandler(createTransactionUsecase usecases_transaction.CreateTransactionUsecase) TransactionHandler {
+	return &transactionHandler{
+		createTransactionUsecase: createTransactionUsecase,
 	}
 }
 
-func (h *tableHandler) Create(w http.ResponseWriter, r *http.Request) {
+func (h *transactionHandler) Create(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
-	var payload models.CreateTableModel
+	var payload models.CreateTransactionModel
 
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
 		handler.HandleHttpError(w, http.StatusBadRequest, handler.HttpMessage[http.StatusBadRequest], err)
@@ -39,12 +39,12 @@ func (h *tableHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	createdTable, err := h.createTableUsecase.Execute(&payload)
+	createdTransaction, err := h.createTransactionUsecase.Execute(&payload)
 
 	if err != nil {
 		handler.HandleHttpError(w, http.StatusInternalServerError, handler.HttpMessage[http.StatusInternalServerError], err)
 		return
 	}
 
-	handler.HandleHttpSuccess(w, http.StatusCreated, handler.HttpMessage[http.StatusCreated], createdTable)
+	handler.HandleHttpSuccess(w, http.StatusCreated, handler.HttpMessage[http.StatusCreated], createdTransaction)
 }
