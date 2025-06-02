@@ -15,7 +15,6 @@ func TransactionTypes(dbConnection *infra_db.DBConnections) {
 	if err := db.Find(&tableTypes).Error; err != nil {
 		log.Fatal("Error finding table types => ", err)
 	}
-	log.Println(tableTypes)
 
 	tableTypeMap := make(map[string]*entities.TableType)
 	for i := range tableTypes {

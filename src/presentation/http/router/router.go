@@ -22,11 +22,11 @@ func InitRoutes(container *shared.Container) *http.ServeMux {
 	router_transaction.TransactionRoutes(apiMux, container)
 	router_user.UserRoutes(apiMux, container)
 
-	mux.Handle("/api/", http.StripPrefix("/api/", apiMux))
+	mux.Handle("/api/", http.StripPrefix("/api", apiMux))
 
 	// Handle not found
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		handler.HandleHttpError(w, http.StatusNotFound, "Not found", nil)
+		handler.HandleHttpError(w, http.StatusNotFound, "Not foundddd", nil)
 	})
 
 	return mux

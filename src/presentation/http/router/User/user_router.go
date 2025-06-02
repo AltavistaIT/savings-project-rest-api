@@ -8,10 +8,12 @@ import (
 	"github.com/ssssshel/sp-api/src/presentation/http/handler"
 	handler_user "github.com/ssssshel/sp-api/src/presentation/http/handler/User"
 	"github.com/ssssshel/sp-api/src/shared"
+	"github.com/ssssshel/sp-api/src/shared/logger"
 	usecases_user "github.com/ssssshel/sp-api/src/usecases/User"
 )
 
 func UserRoutes(mux *http.ServeMux, container *shared.Container) {
+	logger.Info("Configuring user routes")
 	userRepository := infra_db.NewUserRepository(container.DB.DBConn)
 	createUserUsecase := usecases_user.NewCreateUserUsecase(userRepository)
 	getUserByIdUsecase := usecases_user.NewGetUserByIdUsecase(userRepository)

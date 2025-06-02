@@ -5,5 +5,6 @@ import (
 )
 
 type TransactionRepository interface {
+	GetTransactionsByTableID(tableID uint64) ([]*entities.Transaction, error)
 	CreateTransaction(transaction *entities.Transaction) (*entities.Transaction, error)
 }

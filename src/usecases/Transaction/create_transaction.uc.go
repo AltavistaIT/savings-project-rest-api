@@ -4,6 +4,7 @@ import (
 	"github.com/ssssshel/sp-api/src/domain/entities"
 	"github.com/ssssshel/sp-api/src/domain/models"
 	"github.com/ssssshel/sp-api/src/domain/repositories"
+	"gorm.io/gorm"
 )
 
 type CreateTransactionUsecase interface {
@@ -23,12 +24,18 @@ func NewCreateTransactionUsecase(txRepository repositories.TransactionRepository
 }
 
 func (uc *createTransactionUseCase) Execute(transaction *models.CreateTransactionModel) (*entities.Transaction, error) {
-	transactionTable, err := uc.transactionTableRepository.GetLastTransactionTableByTableID(transaction.TableID)
-	if err != nil {
+	var expectedPosition int
+	lastTxTable, err := uc.transactionTableRepository.GetLastTransactionTableByTableID(transaction.TableID)
+
+	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}
 
-	expectedPosition := transactionTable.Position + 1
+	if lastTxTable != nil {
+		expectedPosition = lastTxTable.Position + 1
+	} else {
+		expectedPosition = 1
+	}
 
 	createdTx, err := uc.transactionRepository.CreateTransaction(&entities.Transaction{
 		Description: transaction.Description,

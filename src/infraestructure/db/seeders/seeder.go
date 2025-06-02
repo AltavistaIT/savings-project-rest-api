@@ -21,4 +21,6 @@ func SeedData[T any](db *gorm.DB, data []T, uniqueColumn string, getValue func(T
 			log.Printf("⚠️ Already exists: %+v\n", record)
 		}
 	}
+
+	log.Println("Seed data completed")
 }

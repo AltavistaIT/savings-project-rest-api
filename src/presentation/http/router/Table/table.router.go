@@ -12,13 +12,23 @@ import (
 
 func TableRouter(mux *http.ServeMux, container *shared.Container) {
 	tableRepository := infra_db.NewTableRepository(container.DB.DBConn)
+	getTableByIdUsecase := usecases_table.NewGetTableByIdUsecase(tableRepository)
 	createTableUsecase := usecases_table.NewCreateTableUsecase(tableRepository)
-	tableHandler := handler_table.NewTableHandler(createTableUsecase)
+	tableHandler := handler_table.NewTableHandler(createTableUsecase, getTableByIdUsecase)
 
 	mux.HandleFunc("/tables", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
 			tableHandler.Create(w, r)
+		default:
+			handler.HandleHttpError(w, http.StatusMethodNotAllowed, "Method not allowed", nil)
+		}
+	})
+
+	mux.HandleFunc("/tables/", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodGet:
+			tableHandler.GetById(w, r)
 		default:
 			handler.HandleHttpError(w, http.StatusMethodNotAllowed, "Method not allowed", nil)
 		}

@@ -2,8 +2,9 @@ package handler
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
+
+	"github.com/ssssshel/sp-api/src/shared/logger"
 )
 
 func HandleHttpError(w http.ResponseWriter, statusCode int, message string, err error) {
@@ -13,10 +14,10 @@ func HandleHttpError(w http.ResponseWriter, statusCode int, message string, err 
 	}
 
 	if err != nil {
-		log.Printf("%s: %v", message, err)
+		logger.Info("%s: %v", message, err)
 		response["error"] = err.Error()
 	} else {
-		log.Printf("%s", message)
+		logger.Info("%s", message)
 	}
 
 	w.Header().Set("Content-Type", "application/json")

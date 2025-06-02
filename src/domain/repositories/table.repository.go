@@ -7,4 +7,5 @@ import (
 
 type TableRepository interface {
 	CreateTable(table *models.CreateTableModel) (*entities.Table, error)
+	GetTableById(id uint64) (*entities.Table, error)
 }

@@ -16,11 +16,11 @@ func NewUserRepository(db *gorm.DB) repositories.UserRepository {
 	}
 }
 
-func (r *userRepository) CreateUser(user *entities.User) (*entities.User, error) {
-	return user, r.db.Create(user).Error
-}
-
 func (r *userRepository) GetUserById(id uint64) (*entities.User, error) {
 	var user entities.User
 	return &user, r.db.Where("id = ?", id).First(&user).Error
+}
+
+func (r *userRepository) CreateUser(user *entities.User) (*entities.User, error) {
+	return user, r.db.Create(user).Error
 }

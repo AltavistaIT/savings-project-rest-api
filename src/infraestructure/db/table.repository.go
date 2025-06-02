@@ -19,6 +19,12 @@ func NewTableRepository(db *gorm.DB) repositories.TableRepository {
 	}
 }
 
+func (r *tableRepository) GetTableById(id uint64) (*entities.Table, error) {
+	var table entities.Table
+	err := r.db.Where("id = ?", id).First(&table).Error
+	return &table, err
+}
+
 func (r *tableRepository) CreateTable(table *models.CreateTableModel) (*entities.Table, error) {
 	tableModel := &entities.Table{
 		UserID:    table.UserID,
@@ -29,7 +35,7 @@ func (r *tableRepository) CreateTable(table *models.CreateTableModel) (*entities
 	result := r.db.Where("user_id = ? AND type_id = ? AND month_year = ?", table.UserID, table.TypeID, table.MonthYear).Attrs(tableModel).FirstOrCreate(tableModel)
 
 	if result.RowsAffected == 0 {
-		return nil, errors.New("table already exists")
+		return nil, errors.New("table not created")
 	}
 
 	if result.Error != nil {

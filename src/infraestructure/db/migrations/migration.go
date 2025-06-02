@@ -40,4 +40,5 @@ func MigrateDB(dbConnection *infra_db.DBConnections) {
 	// Seeders
 	seeders.TableTypes(dbConnection)
 	seeders.TransactionTypes(dbConnection)
+	seeders.Currencies(dbConnection)
 }

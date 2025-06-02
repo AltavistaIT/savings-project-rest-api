@@ -12,6 +12,8 @@ type Table struct {
 	Status    bool       `json:"status" gorm:"default:true"`
 	MonthYear string     `json:"month_year" gorm:"type:text; not null; check: month_year ~ '^[0-9]{4}-[0-9]{2}$'"`
 
+	TableTransactions []*TableTransaction `json:"table_transactions,omitempty" gorm:"foreignKey:TableID"`
+
 	CreatedAt time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
 	UpdatedAt time.Time `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP"`
 }
