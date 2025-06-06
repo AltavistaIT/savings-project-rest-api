@@ -12,7 +12,8 @@ import (
 
 func TableRouter(mux *http.ServeMux, container *shared.Container) {
 	tableRepository := infra_db.NewTableRepository(container.DB.DBConn)
-	getTableByIdUsecase := usecases_table.NewGetTableByIdUsecase(tableRepository)
+	transactionRepository := infra_db.NewTransactionRepository(container.DB.DBConn)
+	getTableByIdUsecase := usecases_table.NewGetTableByIdUsecase(tableRepository, transactionRepository)
 	createTableUsecase := usecases_table.NewCreateTableUsecase(tableRepository)
 	tableHandler := handler_table.NewTableHandler(createTableUsecase, getTableByIdUsecase)
 

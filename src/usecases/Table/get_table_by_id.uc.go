@@ -1,24 +1,40 @@
 package usecases_table
 
 import (
-	"github.com/ssssshel/sp-api/src/domain/entities"
+	"github.com/ssssshel/sp-api/src/domain/aggregates"
 	"github.com/ssssshel/sp-api/src/domain/repositories"
 )
 
 type GetTableByIdUsecase interface {
-	Execute(id uint64) (*entities.Table, error)
+	Execute(id uint64) (*aggregates.TableWithTransactions, error)
 }
 
 type getTableByIdUsecase struct {
-	tableRepository repositories.TableRepository
+	tableRepository       repositories.TableRepository
+	transactionRepository repositories.TransactionRepository
 }
 
-func NewGetTableByIdUsecase(tableRepository repositories.TableRepository) GetTableByIdUsecase {
+func NewGetTableByIdUsecase(tableRepository repositories.TableRepository, transactionRepository repositories.TransactionRepository) GetTableByIdUsecase {
 	return &getTableByIdUsecase{
-		tableRepository: tableRepository,
+		tableRepository:       tableRepository,
+		transactionRepository: transactionRepository,
 	}
 }
 
-func (u *getTableByIdUsecase) Execute(id uint64) (*entities.Table, error) {
-	return u.tableRepository.GetTableById(id)
+func (u *getTableByIdUsecase) Execute(id uint64) (*aggregates.TableWithTransactions, error) {
+	table, err := u.tableRepository.GetTableById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	transactions, err := u.transactionRepository.GetTransactionsByTableID(table.ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &aggregates.TableWithTransactions{
+		Table:        table,
+		Transactions: transactions,
+	}, nil
 }
