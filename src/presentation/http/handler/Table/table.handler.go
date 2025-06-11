@@ -36,19 +36,19 @@ func (h *tableHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var payload models.CreateTableModel
 
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
-		handler.HandleHttpError(w, http.StatusBadRequest, handler.HttpMessage[http.StatusBadRequest], err)
+		handler.HandleHttpError(w, http.StatusBadRequest, err)
 		return
 	}
 
 	if err := validator.New().Struct(payload); err != nil {
-		handler.HandleHttpError(w, http.StatusBadRequest, handler.HttpMessage[http.StatusBadRequest], err)
+		handler.HandleHttpError(w, http.StatusBadRequest, err)
 		return
 	}
 
 	createdTable, err := h.createTableUsecase.Execute(&payload)
 
 	if err != nil {
-		handler.HandleHttpError(w, http.StatusInternalServerError, handler.HttpMessage[http.StatusInternalServerError], err)
+		handler.HandleHttpError(w, http.StatusInternalServerError, err)
 		return
 	}
 
@@ -63,14 +63,14 @@ func (h *tableHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	payload.ID = tableId
 
 	if err != nil || validator.New().Struct(payload) != nil {
-		handler.HandleHttpError(w, http.StatusBadRequest, handler.HttpMessage[http.StatusBadRequest], errors.New("invalid request"))
+		handler.HandleHttpError(w, http.StatusBadRequest, errors.New("invalid request"))
 		return
 	}
 
 	table, err := h.getTableByIdUsecase.Execute(payload.ID)
 
 	if err != nil {
-		handler.HandleHttpError(w, http.StatusInternalServerError, handler.HttpMessage[http.StatusInternalServerError], err)
+		handler.HandleHttpError(w, http.StatusInternalServerError, err)
 		return
 	}
 

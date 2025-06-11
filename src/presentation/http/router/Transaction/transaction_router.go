@@ -1,7 +1,6 @@
 package router_transaction
 
 import (
-	"errors"
 	"net/http"
 
 	infra_db "github.com/ssssshel/sp-api/src/infraestructure/db"
@@ -22,7 +21,7 @@ func TransactionRoutes(mux *http.ServeMux, container *shared.Container) {
 		case http.MethodPost:
 			transactionHandler.Create(w, r)
 		default:
-			handler.HandleHttpError(w, http.StatusMethodNotAllowed, "Method not allowed", errors.New("method not allowed"))
+			handler.HandleHttpError(w, http.StatusMethodNotAllowed, nil)
 		}
 	})
 }

@@ -17,6 +17,10 @@ func InitRoutes(container *shared.Container) *http.ServeMux {
 		w.Write([]byte("Server is up and running"))
 	})
 
+	mux.HandleFunc("/docs", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "./openapi.yaml")
+	})
+
 	apiMux := http.NewServeMux()
 	router_table.TableRouter(apiMux, container)
 	router_transaction.TransactionRoutes(apiMux, container)
@@ -26,7 +30,7 @@ func InitRoutes(container *shared.Container) *http.ServeMux {
 
 	// Handle not found
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		handler.HandleHttpError(w, http.StatusNotFound, "Not foundddd", nil)
+		handler.HandleHttpError(w, http.StatusNotFound, nil)
 	})
 
 	return mux

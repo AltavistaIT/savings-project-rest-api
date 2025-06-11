@@ -4,21 +4,22 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/ssssshel/sp-api/src/domain/models"
 	"github.com/ssssshel/sp-api/src/shared/logger"
 )
 
-func HandleHttpError(w http.ResponseWriter, statusCode int, message string, err error) {
-	response := map[string]interface{}{
-		"message": message,
-		"error":   true,
+func HandleHttpError(w http.ResponseWriter, statusCode int, message error) {
+	response := models.ErrorResponse{
+		Success: false,
 	}
 
-	if err != nil {
-		logger.Info("%s: %v", message, err)
-		response["error"] = err.Error()
+	if message != nil {
+		response.Message = message.Error()
 	} else {
-		logger.Info("%s", message)
+		response.Message = HttpMessage[statusCode]
 	}
+
+	logger.Info("%s", message)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
@@ -30,16 +31,16 @@ func HandleHttpSuccess(w http.ResponseWriter, statusCode int, message string, da
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 
-	response := map[string]interface{}{
-		"message": message,
-		"error":   nil,
+	response := models.SuccessResponse{
+		Message: message,
+		Success: true,
 	}
 
 	if len(data) == 1 && data[0] != nil {
-		response["data"] = data[0]
+		response.Data = data[0]
 	}
 	if len(data) > 1 {
-		response["data"] = data
+		response.Data = data
 	}
 
 	json.NewEncoder(w).Encode(response)

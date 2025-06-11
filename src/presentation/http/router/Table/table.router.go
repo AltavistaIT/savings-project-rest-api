@@ -22,7 +22,7 @@ func TableRouter(mux *http.ServeMux, container *shared.Container) {
 		case http.MethodPost:
 			tableHandler.Create(w, r)
 		default:
-			handler.HandleHttpError(w, http.StatusMethodNotAllowed, "Method not allowed", nil)
+			handler.HandleHttpError(w, http.StatusMethodNotAllowed, nil)
 		}
 	})
 
@@ -31,7 +31,7 @@ func TableRouter(mux *http.ServeMux, container *shared.Container) {
 		case http.MethodGet:
 			tableHandler.GetById(w, r)
 		default:
-			handler.HandleHttpError(w, http.StatusMethodNotAllowed, "Method not allowed", nil)
+			handler.HandleHttpError(w, http.StatusMethodNotAllowed, nil)
 		}
 	})
 }

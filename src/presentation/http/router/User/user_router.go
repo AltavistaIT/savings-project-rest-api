@@ -1,7 +1,6 @@
 package router_user
 
 import (
-	"errors"
 	"net/http"
 
 	infra_db "github.com/ssssshel/sp-api/src/infraestructure/db"
@@ -24,7 +23,7 @@ func UserRoutes(mux *http.ServeMux, container *shared.Container) {
 		case http.MethodPost:
 			userHandler.Create(w, r)
 		default:
-			handler.HandleHttpError(w, http.StatusMethodNotAllowed, "Method not allowed", errors.New("method not allowed"))
+			handler.HandleHttpError(w, http.StatusMethodNotAllowed, nil)
 		}
 	})
 
@@ -33,7 +32,7 @@ func UserRoutes(mux *http.ServeMux, container *shared.Container) {
 		case http.MethodGet:
 			userHandler.GetById(w, r)
 		default:
-			handler.HandleHttpError(w, http.StatusMethodNotAllowed, "Method not allowed", errors.New("method not allowed"))
+			handler.HandleHttpError(w, http.StatusMethodNotAllowed, nil)
 		}
 	})
 }

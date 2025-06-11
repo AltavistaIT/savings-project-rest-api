@@ -38,14 +38,14 @@ func (h *userHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	payload.ID = userId
 
 	if err != nil || validator.New().Struct(payload) != nil {
-		handler.HandleHttpError(w, http.StatusBadRequest, handler.HttpMessage[http.StatusBadRequest], errors.New("invalid request"))
+		handler.HandleHttpError(w, http.StatusBadRequest, errors.New("invalid request"))
 		return
 	}
 
 	user, err := h.getUserByIdUsecase.Execute(payload.ID)
 
 	if err != nil {
-		handler.HandleHttpError(w, http.StatusInternalServerError, handler.HttpMessage[http.StatusInternalServerError], err)
+		handler.HandleHttpError(w, http.StatusInternalServerError, err)
 		return
 	}
 
@@ -58,19 +58,19 @@ func (h *userHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var payload models.CreateUserModel
 
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
-		handler.HandleHttpError(w, http.StatusBadRequest, handler.HttpMessage[http.StatusBadRequest], err)
+		handler.HandleHttpError(w, http.StatusBadRequest, err)
 		return
 	}
 
 	if err := validator.New().Struct(payload); err != nil {
-		handler.HandleHttpError(w, http.StatusBadRequest, handler.HttpMessage[http.StatusBadRequest], err)
+		handler.HandleHttpError(w, http.StatusBadRequest, err)
 		return
 	}
 
 	createdUser, err := h.createUserUsecase.Execute(&payload)
 
 	if err != nil {
-		handler.HandleHttpError(w, http.StatusInternalServerError, handler.HttpMessage[http.StatusInternalServerError], err)
+		handler.HandleHttpError(w, http.StatusInternalServerError, err)
 		return
 	}
 

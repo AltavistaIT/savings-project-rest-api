@@ -30,19 +30,19 @@ func (h *transactionHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var payload models.CreateTransactionModel
 
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
-		handler.HandleHttpError(w, http.StatusBadRequest, handler.HttpMessage[http.StatusBadRequest], err)
+		handler.HandleHttpError(w, http.StatusBadRequest, err)
 		return
 	}
 
 	if err := validator.New().Struct(payload); err != nil {
-		handler.HandleHttpError(w, http.StatusBadRequest, handler.HttpMessage[http.StatusBadRequest], err)
+		handler.HandleHttpError(w, http.StatusBadRequest, err)
 		return
 	}
 
 	createdTransaction, err := h.createTransactionUsecase.Execute(&payload)
 
 	if err != nil {
-		handler.HandleHttpError(w, http.StatusInternalServerError, handler.HttpMessage[http.StatusInternalServerError], err)
+		handler.HandleHttpError(w, http.StatusInternalServerError, err)
 		return
 	}
 

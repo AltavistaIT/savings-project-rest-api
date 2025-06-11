@@ -1,0 +1,185 @@
+openapi: 3.0.0
+info:
+  title: sp_internal_api
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api
+paths:
+  /docs:
+    get:
+      tags:
+        - Docs
+      summary: Get the OpenAPI specification
+      responses:
+        "200":
+          description: OpenAPI specification
+  /health:
+    get:
+      tags:
+        - Health
+      summary: Check the health of the server
+      responses:
+        "200":
+          description: Server is up and running
+  /tables:
+    post:
+      summary: Create a new table
+      tags:
+        - Tables
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTableModel"
+      responses:
+        "200":
+          description: Table created successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/TableEntity"
+        "400":
+          description: Table already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /tables/{id}:
+    get:
+      tags:
+        - Tables
+      summary: Get table by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Table found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/TableWithTransactionsAggregate"
+        "404":
+          description: Table not found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    GetTableModel:
+      type: object
+      properties:
+        id:
+          type: integer
+    CreateTableModel:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        type_id:
+          type: integer
+        month_year:
+          type: string
+      required:
+        - user_id
+        - type_id
+        - month_year
+      example:
+        user_id: 1
+        type_id: 1
+        month_year: "2023-01"
+    SuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        data:
+          type: object
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+      example:
+        message: Table already exists
+        error: Table already exists
+        success: false
+    TableEntity:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        type_id:
+          type: integer
+        amount:
+          type: number
+        status:
+          type: boolean
+        month_year:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    TransactionEntity:
+      type: object
+      properties:
+        id:
+          type: integer
+        description:
+          type: string
+        type_id:
+          type: integer
+        amount:
+          type: number
+        currency_id:
+          type: integer
+        status:
+          type: boolean
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    TableWithTransactionsAggregate:
+      type: object
+      properties:
+        table:
+          $ref: "#/components/schemas/TableEntity"
+        transactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/TransactionEntity"

@@ -40,7 +40,7 @@ func (uc *createTransactionUseCase) Execute(transaction *models.CreateTransactio
 	createdTx, err := uc.transactionRepository.CreateTransaction(&entities.Transaction{
 		Description: transaction.Description,
 		TypeID:      transaction.TypeID,
-		Budget:      transaction.Budget,
+		Amount:      transaction.Budget,
 		CurrencyID:  transaction.CurrencyID,
 	})
 
