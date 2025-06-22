@@ -13,7 +13,8 @@ import (
 func TransactionRoutes(mux *http.ServeMux, container *shared.Container) {
 	transacionRepository := infra_db.NewTransactionRepository(container.DB.DBConn)
 	transactionTableRepository := infra_db.NewTransactionTableRepository(container.DB.DBConn)
-	createTransactionUsecase := usecases_transaction.NewCreateTransactionUsecase(transacionRepository, transactionTableRepository)
+	tableRepository := infra_db.NewTableRepository(container.DB.DBConn)
+	createTransactionUsecase := usecases_transaction.NewCreateTransactionUsecase(transacionRepository, transactionTableRepository, tableRepository)
 	transactionHandler := handler_transaction.NewTransactionHandler(createTransactionUsecase)
 
 	mux.HandleFunc("/transactions", func(w http.ResponseWriter, r *http.Request) {

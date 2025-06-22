@@ -44,3 +44,12 @@ func (r *tableRepository) CreateTable(table *models.CreateTableModel) (*entities
 
 	return tableModel, nil
 }
+
+func (r *tableRepository) UpdateTableAmount(table *models.UpdateTableAmountModel) (*entities.Table, error) {
+	var tableModel entities.Table
+	err := r.db.Model(&tableModel).
+		Where("id = ?", table.ID).
+		Update("amount", gorm.Expr("amount + ?", table.Amount)).Error
+
+	return &tableModel, err
+}

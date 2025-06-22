@@ -14,15 +14,36 @@ type CreateTransactionUsecase interface {
 type createTransactionUseCase struct {
 	transactionRepository      repositories.TransactionRepository
 	transactionTableRepository repositories.TransactionTableRepository
+	tableRepository            repositories.TableRepository
 }
 
-func NewCreateTransactionUsecase(txRepository repositories.TransactionRepository, txTableRepository repositories.TransactionTableRepository) CreateTransactionUsecase {
+func NewCreateTransactionUsecase(txRepository repositories.TransactionRepository, txTableRepository repositories.TransactionTableRepository, tableRepository repositories.TableRepository) CreateTransactionUsecase {
 	return &createTransactionUseCase{
 		transactionRepository:      txRepository,
 		transactionTableRepository: txTableRepository,
+		tableRepository:            tableRepository,
 	}
 }
 
+// Execute creates a new transaction and adds it to the specified table.
+//
+// It first finds the position for the new transaction by getting the last transaction table
+// for the specified table id. If it doesn't exist, the position is set to 1. Otherwise,
+// the position is set to the position of the last transaction plus one.
+//
+// The transaction is then created using the transaction repository.
+//
+// If the transaction is created successfully, a new transaction table is created using the
+// transaction table repository, with the table id and transaction id set to the specified
+// table id and the id of the newly created transaction, respectively. The position is set
+// to the position determined above.
+//
+// If the transaction table is created successfully, the amount of the table is updated
+// using the table repository, with the id set to the specified table id and the amount
+// set to the specified budget.
+//
+// If any error occurs during the above steps, it is returned. Otherwise, the newly created
+// transaction is returned.
 func (uc *createTransactionUseCase) Execute(transaction *models.CreateTransactionModel) (*entities.Transaction, error) {
 	var expectedPosition int
 	lastTxTable, err := uc.transactionTableRepository.GetLastTransactionTableByTableID(transaction.TableID)
@@ -40,7 +61,7 @@ func (uc *createTransactionUseCase) Execute(transaction *models.CreateTransactio
 	createdTx, err := uc.transactionRepository.CreateTransaction(&entities.Transaction{
 		Description: transaction.Description,
 		TypeID:      transaction.TypeID,
-		Amount:      transaction.Budget,
+		Amount:      transaction.Amount,
 		CurrencyID:  transaction.CurrencyID,
 	})
 
@@ -52,6 +73,13 @@ func (uc *createTransactionUseCase) Execute(transaction *models.CreateTransactio
 		TableID:       transaction.TableID,
 		TransactionID: createdTx.ID,
 		Position:      expectedPosition,
+	}); err != nil {
+		return nil, err
+	}
+
+	if _, err := uc.tableRepository.UpdateTableAmount(&models.UpdateTableAmountModel{
+		ID:     transaction.TableID,
+		Amount: transaction.Amount,
 	}); err != nil {
 		return nil, err
 	}

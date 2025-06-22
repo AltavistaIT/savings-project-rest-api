@@ -92,6 +92,41 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /transactions:
+    post:
+      summary: Create a new transaction
+      tags:
+        - Transactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTransactionModel"
+      responses:
+        "200":
+          description: Transaction created successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/TransactionEntity"
+        "404":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     GetTableModel:
@@ -116,6 +151,19 @@ components:
         user_id: 1
         type_id: 1
         month_year: "2023-01"
+    CreateTransactionModel:
+      type: object
+      properties:
+        description:
+          type: string
+        table_id:
+          type: integer
+        type_id:
+          type: integer
+        amount:
+          type: number
+        currency_id:
+          type: integer
     SuccessResponse:
       type: object
       properties:
