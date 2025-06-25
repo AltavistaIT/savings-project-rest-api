@@ -28,7 +28,6 @@ func (u *getTableByIdUsecase) Execute(id uint64) (*aggregates.TableWithTransacti
 	}
 
 	transactions, err := u.transactionRepository.GetTransactionsByTableID(table.ID)
-
 	if err != nil {
 		return nil, err
 	}

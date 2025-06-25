@@ -1,0 +1,27 @@
+package router_config
+
+import (
+	"net/http"
+
+	infra_db "github.com/ssssshel/sp-api/src/infraestructure/db"
+	"github.com/ssssshel/sp-api/src/presentation/http/handler"
+	handler_config "github.com/ssssshel/sp-api/src/presentation/http/handler/Config"
+	"github.com/ssssshel/sp-api/src/shared"
+	usecases_config "github.com/ssssshel/sp-api/src/usecases/Config"
+)
+
+func ConfigRouter(mux *http.ServeMux, container *shared.Container) {
+	currencyRepository := infra_db.NewCurrencyRepository(container.DB.DBConn)
+	transactionTypeRepository := infra_db.NewTransactionTypeRepository(container.DB.DBConn)
+	configUsecase := usecases_config.NewGetConfigUsecase(currencyRepository, transactionTypeRepository)
+	configHandler := handler_config.NewConfigHandler(configUsecase)
+
+	mux.HandleFunc("/config", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodGet:
+			configHandler.Get(w, r)
+		default:
+			handler.HandleHttpError(w, http.StatusMethodNotAllowed, nil)
+		}
+	})
+}
