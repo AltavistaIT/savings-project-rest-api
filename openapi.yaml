@@ -201,6 +201,8 @@ components:
         message: Table already exists
         error: Table already exists
         success: false
+    CurrencyEntity:
+  
     TableEntity:
       type: object
       properties:
