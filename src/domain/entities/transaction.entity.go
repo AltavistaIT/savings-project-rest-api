@@ -12,6 +12,6 @@ type Transaction struct {
 	Currency        *Currency        `json:"currency,omitempty" gorm:"foreignKey:CurrencyID; constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
 	Status          bool             `json:"status" gorm:"default:true"`
 
-	CreatedAt time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
-	UpdatedAt time.Time `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP"`
+	CreatedAt *time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
+	UpdatedAt *time.Time `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP"`
 }
