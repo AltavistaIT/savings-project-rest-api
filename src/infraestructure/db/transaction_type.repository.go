@@ -19,5 +19,6 @@ func NewTransactionTypeRepository(db *gorm.DB) repositories.TransactionTypeRepos
 func (r *transactionTypeRepository) GetAll() ([]*entities.TransactionType, error) {
 	var transactionTypes []*entities.TransactionType
 	err := r.db.Select("id", "key", "description", "table_type_id").Find(&transactionTypes).Error
+
 	return transactionTypes, err
 }
