@@ -202,7 +202,22 @@ components:
         error: Table already exists
         success: false
     CurrencyEntity:
-  
+      type: object
+      properties:
+        id:
+          type: integer
+        description: 
+          type: string
+        abbreviation:
+          type: string
+        symbol:
+          type: string
+        status:
+          type: boolean 
+        created_at:
+          type: string
+        updated_at:
+          type: string
     TableEntity:
       type: object
       properties:
@@ -237,6 +252,23 @@ components:
           type: integer
         status:
           type: boolean
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    TransactionTypeEntity:
+      type: object
+      properties:
+        id:
+          type: integer
+        key:
+          type: string
+        description:
+          type: string
+        status:
+          type: boolean
+        table_type_id:
+          type: integer
         created_at:
           type: string
         updated_at:
