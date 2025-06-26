@@ -6,5 +6,5 @@ import (
 
 type Config struct {
 	Currencies       []*entities.Currency        `json:"currencies"`
-	TransactionTypes []*entities.TransactionType `json:"transactionTypes"`
+	TransactionTypes []*entities.TransactionType `json:"transaction_types"`
 }

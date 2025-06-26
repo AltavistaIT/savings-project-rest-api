@@ -12,6 +12,6 @@ type Report struct {
 	Content     string      `json:"content" gorm:"type:json; not null"`
 	Status      bool        `json:"status" gorm:"default:true"`
 
-	CreatedAt time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
-	UpdatedAt time.Time `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP"`
+	CreatedAt *time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
+	UpdatedAt *time.Time `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP"`
 }

@@ -18,6 +18,6 @@ func NewCurrencyRepository(db *gorm.DB) repositories.CurrencyRepository {
 
 func (r *currencyRepository) GetAll() ([]*entities.Currency, error) {
 	var currencies []*entities.Currency
-	err := r.db.Find(&currencies).Error
+	err := r.db.Select("id", "abbreviation", "description", "symbol").Find(&currencies).Error
 	return currencies, err
 }

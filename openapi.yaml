@@ -21,6 +21,23 @@ paths:
       responses:
         "200":
           description: Server is up and running
+  /config:
+    get:
+      tags:
+        - Config
+      summary: Get the configuration of webapp
+      responses:
+        "200":
+          description: Configuration of webapp
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/ConfigEntity"
   /tables:
     post:
       summary: Create a new table
@@ -231,3 +248,14 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TransactionEntity"
+    ConfigAggregate:
+      type: object
+      properties:
+        currencies:
+          type: array
+          items:
+            $ref: "#/components/schemas/CurrencyEntity"
+        transaction_types:
+          type: array
+          items:
+            $ref: "#/components/schemas/TransactionTypeEntity"

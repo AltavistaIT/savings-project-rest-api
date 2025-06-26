@@ -23,13 +23,11 @@ func NewGetConfigUsecase(currencyRepository repositories.CurrencyRepository, tra
 
 func (uc *getConfigUsecase) Execute() (*aggregates.Config, error) {
 	currencies, err := uc.currencyRepository.GetAll()
-
 	if err != nil {
 		return nil, err
 	}
 
 	transactionTypes, err := uc.transactionTypeRepository.GetAll()
-
 	if err != nil {
 		return nil, err
 	}

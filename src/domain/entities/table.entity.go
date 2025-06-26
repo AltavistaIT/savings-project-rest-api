@@ -14,6 +14,6 @@ type Table struct {
 
 	TableTransactions []*TableTransaction `json:"table_transactions,omitempty" gorm:"foreignKey:TableID"`
 
-	CreatedAt time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
-	UpdatedAt time.Time `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP"`
+	CreatedAt *time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
+	UpdatedAt *time.Time `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP"`
 }
