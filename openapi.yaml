@@ -37,7 +37,7 @@ paths:
                   - type: object
                     properties:
                       data:
-                        $ref: "#/components/schemas/ConfigEntity"
+                        $ref: "#/components/schemas/ConfigAggregate"
   /tables:
     post:
       summary: Create a new table

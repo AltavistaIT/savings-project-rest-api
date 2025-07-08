@@ -10,7 +10,7 @@ type Table struct {
 	TableType *TableType `json:"table_type,omitempty" gorm:"foreignKey:TypeID"`
 	Amount    float64    `json:"amount" gorm:"type:decimal(10,2); not null; default:0"`
 	Status    bool       `json:"status" gorm:"default:true"`
-	MonthYear string     `json:"month_year" gorm:"type:text; not null; check: month_year ~ '^[0-9]{4}-[0-9]{2}$'"`
+	MonthYear time.Time  `json:"month_year" gorm:"type:date;not null;index:idx_month_year"`
 
 	TableTransactions []*TableTransaction `json:"table_transactions,omitempty" gorm:"foreignKey:TableID"`
 
