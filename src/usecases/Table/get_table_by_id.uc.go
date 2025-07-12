@@ -1,12 +1,12 @@
 package usecases_table
 
 import (
-	"github.com/ssssshel/sp-api/src/domain/aggregates"
 	"github.com/ssssshel/sp-api/src/domain/repositories"
+	"github.com/ssssshel/sp-api/src/domain/responses"
 )
 
 type GetTableByIdUsecase interface {
-	Execute(id uint64) (*aggregates.TableWithTransactions, error)
+	Execute(id uint64) (*responses.GetTableByIdResponse, error)
 }
 
 type getTableByIdUsecase struct {
@@ -21,7 +21,7 @@ func NewGetTableByIdUsecase(tableRepository repositories.TableRepository, transa
 	}
 }
 
-func (u *getTableByIdUsecase) Execute(id uint64) (*aggregates.TableWithTransactions, error) {
+func (u *getTableByIdUsecase) Execute(id uint64) (*responses.GetTableByIdResponse, error) {
 	table, err := u.tableRepository.GetTableById(id)
 	if err != nil {
 		return nil, err
@@ -32,7 +32,7 @@ func (u *getTableByIdUsecase) Execute(id uint64) (*aggregates.TableWithTransacti
 		return nil, err
 	}
 
-	return &aggregates.TableWithTransactions{
+	return &responses.GetTableByIdResponse{
 		Table:        table,
 		Transactions: transactions,
 	}, nil

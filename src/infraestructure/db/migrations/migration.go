@@ -20,6 +20,7 @@ func MigrateDB(dbConnection *infra_db.DBConnections) {
 		entities.Transaction{},
 		entities.Report{},
 		entities.TableTransaction{},
+		entities.MonthYear{},
 	}
 
 	validModels := []interface{}{}
@@ -41,4 +42,5 @@ func MigrateDB(dbConnection *infra_db.DBConnections) {
 	seeders.TableTypes(dbConnection)
 	seeders.TransactionTypes(dbConnection)
 	seeders.Currencies(dbConnection)
+	seeders.MonthYear(dbConnection)
 }

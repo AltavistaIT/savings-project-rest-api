@@ -17,6 +17,7 @@ func NewTransactionRepository(db *gorm.DB) repositories.TransactionRepository {
 	}
 }
 
+// TODO: no en uso
 func (r *transactionRepository) GetTransactionsByTableID(tableID uint64) ([]*aggregates.TransactionWithPosition, error) {
 	var results []struct {
 		entities.Transaction

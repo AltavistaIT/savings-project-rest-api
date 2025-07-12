@@ -273,7 +273,7 @@ components:
           type: string
         updated_at:
           type: string
-    TableWithTransactionsAggregate:
+    GetTableByIdResponse:
       type: object
       properties:
         table:
@@ -282,7 +282,18 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TransactionEntity"
-    ConfigAggregate:
+    GetConfigDatesResponse:
+      type: object
+      properties:
+        months:
+          type: array
+          items:
+            type: integer
+        years:
+          type: array
+          items:
+            type: integer
+    GetConfigResponse:
       type: object
       properties:
         currencies:
@@ -293,3 +304,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TransactionTypeEntity"
+        month_years:
+          type: array
+          items:
+            $ref: "#/components/schemas/GetConfigDatesResponse"

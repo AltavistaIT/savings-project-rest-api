@@ -13,7 +13,8 @@ import (
 func ConfigRouter(mux *http.ServeMux, container *shared.Container) {
 	currencyRepository := infra_db.NewCurrencyRepository(container.DB.DBConn)
 	transactionTypeRepository := infra_db.NewTransactionTypeRepository(container.DB.DBConn)
-	configUsecase := usecases_config.NewGetConfigUsecase(currencyRepository, transactionTypeRepository)
+	monthYearRepository := infra_db.NewMonthYearRepository(container.DB.DBConn)
+	configUsecase := usecases_config.NewGetConfigUsecase(currencyRepository, transactionTypeRepository, monthYearRepository)
 	configHandler := handler_config.NewConfigHandler(configUsecase)
 
 	mux.HandleFunc("/config", func(w http.ResponseWriter, r *http.Request) {

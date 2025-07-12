@@ -1,6 +1,7 @@
 package entities
 
 type MonthYear struct {
-	Month int
-	Year  int
+	ID    uint64 `json:"id" gorm:"primaryKey"`
+	Month int    `json:"month"`
+	Year  int    `json:"year"`
 }
