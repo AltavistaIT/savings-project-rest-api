@@ -7,5 +7,5 @@ import (
 type GetConfigResponse struct {
 	Currencies       []*entities.Currency        `json:"currencies"`
 	TransactionTypes []*entities.TransactionType `json:"transaction_types"`
-	MonthYears       []*GetConfigDatesResponse   `json:"month_years"`
+	MonthYears       *GetConfigDatesResponse     `json:"month_years"`
 }

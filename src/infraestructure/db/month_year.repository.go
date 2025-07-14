@@ -16,7 +16,7 @@ func NewMonthYearRepository(db *gorm.DB) repositories.MonthYearRepository {
 	}
 }
 
-func (r *monthYearRepository) GetConfigDates() ([]*responses.GetConfigDatesResponse, error) {
+func (r *monthYearRepository) GetConfigDates() (*responses.GetConfigDatesResponse, error) {
 	var months []int
 	var years []int
 	if err := r.db.Table("month_years").Select("DISTINCT month").Order("month").Pluck("month", &months).Error; err != nil {
@@ -27,10 +27,8 @@ func (r *monthYearRepository) GetConfigDates() ([]*responses.GetConfigDatesRespo
 		return nil, err
 	}
 
-	return []*responses.GetConfigDatesResponse{
-		{
-			Months: months,
-			Years:  years,
-		},
+	return &responses.GetConfigDatesResponse{
+		Months: months,
+		Years:  years,
 	}, nil
 }

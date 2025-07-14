@@ -1,28 +1,29 @@
 package usecases_table
 
 import (
+	"github.com/ssssshel/sp-api/src/domain/models"
 	"github.com/ssssshel/sp-api/src/domain/repositories"
 	"github.com/ssssshel/sp-api/src/domain/responses"
 )
 
-type GetTableByIdUsecase interface {
-	Execute(id uint64) (*responses.GetTableResponse, error)
+type GetTableByParamsUsecase interface {
+	Execute(table *models.GetTableByParamsModel) (*responses.GetTableResponse, error)
 }
 
-type getTableByIdUsecase struct {
+type getTableByParamsUsecase struct {
 	tableRepository       repositories.TableRepository
 	transactionRepository repositories.TransactionRepository
 }
 
-func NewGetTableByIdUsecase(tableRepository repositories.TableRepository, transactionRepository repositories.TransactionRepository) GetTableByIdUsecase {
-	return &getTableByIdUsecase{
+func NewGetTableByParamsUsecase(tableRepository repositories.TableRepository, transactionRepository repositories.TransactionRepository) GetTableByParamsUsecase {
+	return &getTableByParamsUsecase{
 		tableRepository:       tableRepository,
 		transactionRepository: transactionRepository,
 	}
 }
 
-func (u *getTableByIdUsecase) Execute(id uint64) (*responses.GetTableResponse, error) {
-	table, err := u.tableRepository.GetTableById(id)
+func (u *getTableByParamsUsecase) Execute(getTableModel *models.GetTableByParamsModel) (*responses.GetTableResponse, error) {
+	table, err := u.tableRepository.GetTableByParams(getTableModel)
 	if err != nil {
 		return nil, err
 	}

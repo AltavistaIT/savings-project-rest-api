@@ -37,7 +37,7 @@ paths:
                   - type: object
                     properties:
                       data:
-                        $ref: "#/components/schemas/ConfigAggregate"
+                        $ref: "#/components/schemas/GetConfigResponse"
   /tables:
     post:
       summary: Create a new table
@@ -73,6 +73,54 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+    get:
+      summary: Get table by parameters
+      tags:
+        - Tables
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: ID of the user
+        - name: type_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: ID of the table type
+        - name: month_year
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "2025-02"
+          description: Month and year in YYYY-MM format
+      responses:
+        "200":
+          description: Table retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/GetTableResponse"
+        "404":
+          description: Table not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /tables/{id}:
     get:
       tags:
@@ -95,7 +143,7 @@ paths:
                   - type: object
                     properties:
                       data:
-                        $ref: "#/components/schemas/TableWithTransactionsAggregate"
+                        $ref: "#/components/schemas/GetTableResponse"
         "404":
           description: Table not found
           content:
@@ -198,8 +246,8 @@ components:
         success:
           type: boolean
       example:
-        message: Table already exists
-        error: Table already exists
+        message: Error message
+        error: Error details
         success: false
     CurrencyEntity:
       type: object
@@ -273,7 +321,7 @@ components:
           type: string
         updated_at:
           type: string
-    GetTableByIdResponse:
+    GetTableResponse:
       type: object
       properties:
         table:
@@ -305,6 +353,4 @@ components:
           items:
             $ref: "#/components/schemas/TransactionTypeEntity"
         month_years:
-          type: array
-          items:
-            $ref: "#/components/schemas/GetConfigDatesResponse"
+          $ref: "#/components/schemas/GetConfigDatesResponse"

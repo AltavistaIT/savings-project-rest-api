@@ -5,7 +5,7 @@ import (
 	"github.com/ssssshel/sp-api/src/domain/entities"
 )
 
-type GetTableByIdResponse struct {
+type GetTableResponse struct {
 	Table        *entities.Table                       `json:"table"`
 	Transactions []*aggregates.TransactionWithPosition `json:"transactions"`
 }

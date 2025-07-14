@@ -6,6 +6,7 @@ import (
 	"github.com/ssssshel/sp-api/src/domain/entities"
 	"github.com/ssssshel/sp-api/src/domain/models"
 	"github.com/ssssshel/sp-api/src/domain/repositories"
+	"github.com/ssssshel/sp-api/src/shared/logger"
 	"gorm.io/gorm"
 )
 
@@ -23,6 +24,13 @@ func (r *tableRepository) GetTableById(id uint64) (*entities.Table, error) {
 	var table entities.Table
 	err := r.db.Where("id = ?", id).First(&table).Error
 	return &table, err
+}
+
+func (r *tableRepository) GetTableByParams(table *models.GetTableByParamsModel) (*entities.Table, error) {
+	var tableModel entities.Table
+	logger.Info("GetTableByParams", table.UserID, table.TypeID, table.MonthYear)
+	err := r.db.Where("user_id = ? AND type_id = ? AND month_year = ?", table.UserID, table.TypeID, table.MonthYear).First(&tableModel).Error
+	return &tableModel, err
 }
 
 func (r *tableRepository) CreateTable(table *entities.Table) (*entities.Table, error) {

@@ -1,5 +1,5 @@
 package models
 
-type GetTableModel struct {
+type GetTableByIdModel struct {
 	ID uint64 `json:"id" validate:"required"`
 }

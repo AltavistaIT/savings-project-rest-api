@@ -5,5 +5,5 @@ import (
 )
 
 type MonthYearRepository interface {
-	GetConfigDates() ([]*responses.GetConfigDatesResponse, error)
+	GetConfigDates() (*responses.GetConfigDatesResponse, error)
 }
