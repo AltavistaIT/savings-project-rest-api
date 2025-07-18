@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/ssssshel/sp-api/src/domain/models"
+	"github.com/ssssshel/sp-api/src/domain/responses"
 	"github.com/ssssshel/sp-api/src/shared/logger"
 )
 
 func HandleHttpError(w http.ResponseWriter, statusCode int, message error) {
-	response := models.ErrorResponse{
+	response := responses.ErrorResponse{
 		Success: false,
 	}
 
@@ -31,7 +31,7 @@ func HandleHttpSuccess(w http.ResponseWriter, statusCode int, message string, da
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 
-	response := models.SuccessResponse{
+	response := responses.SuccessResponse{
 		Message: message,
 		Success: true,
 	}

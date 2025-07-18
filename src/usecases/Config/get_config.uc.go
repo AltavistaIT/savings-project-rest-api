@@ -13,13 +13,15 @@ type getConfigUsecase struct {
 	currencyRepository        repositories.CurrencyRepository
 	transactionTypeRepository repositories.TransactionTypeRepository
 	monthYearRepository       repositories.MonthYearRepository
+	tableTypeRepository       repositories.TableTypeRepository
 }
 
-func NewGetConfigUsecase(currencyRepository repositories.CurrencyRepository, transactionTypeRepository repositories.TransactionTypeRepository, monthYearRepository repositories.MonthYearRepository) GetConfigUsecase {
+func NewGetConfigUsecase(currencyRepository repositories.CurrencyRepository, transactionTypeRepository repositories.TransactionTypeRepository, monthYearRepository repositories.MonthYearRepository, tableTypeRepository repositories.TableTypeRepository) GetConfigUsecase {
 	return &getConfigUsecase{
 		currencyRepository:        currencyRepository,
 		transactionTypeRepository: transactionTypeRepository,
 		monthYearRepository:       monthYearRepository,
+		tableTypeRepository:       tableTypeRepository,
 	}
 }
 
@@ -38,9 +40,16 @@ func (uc *getConfigUsecase) Execute() (*responses.GetConfigResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	tableTypes, err := uc.tableTypeRepository.GetAll()
+	if err != nil {
+		return nil, err
+	}
+
 	return &responses.GetConfigResponse{
 		Currencies:       currencies,
 		TransactionTypes: transactionTypes,
 		MonthYears:       monthYears,
+		TableTypes:       tableTypes,
 	}, nil
 }

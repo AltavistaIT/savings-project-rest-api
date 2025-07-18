@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/ssssshel/sp-api/src/domain/models"
+	"github.com/ssssshel/sp-api/src/domain/dtos"
 	"github.com/ssssshel/sp-api/src/presentation/http/handler"
 	usecases_transaction "github.com/ssssshel/sp-api/src/usecases/Transaction"
 )
@@ -27,7 +27,7 @@ func NewTransactionHandler(createTransactionUsecase usecases_transaction.CreateT
 func (h *transactionHandler) Create(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
-	var payload models.CreateTransactionModel
+	var payload dtos.CreateTransactionDto
 
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
 		handler.HandleHttpError(w, http.StatusBadRequest, err)

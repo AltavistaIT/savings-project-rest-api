@@ -48,7 +48,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateTableModel"
+              $ref: "#/components/schemas/CreateTableDto"
       responses:
         "200":
           description: Table created successfully
@@ -167,7 +167,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateTransactionModel"
+              $ref: "#/components/schemas/CreateTransactionDto"
       responses:
         "200":
           description: Transaction created successfully
@@ -194,12 +194,7 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
-    GetTableModel:
-      type: object
-      properties:
-        id:
-          type: integer
-    CreateTableModel:
+    CreateTableDto:
       type: object
       properties:
         user_id:
@@ -216,7 +211,7 @@ components:
         user_id: 1
         type_id: 1
         month_year: "2023-01"
-    CreateTransactionModel:
+    CreateTransactionDto:
       type: object
       properties:
         description:
@@ -321,6 +316,21 @@ components:
           type: string
         updated_at:
           type: string
+    TableTypeEntity:
+      type: object
+      properties:
+        id:
+          type: integer
+        key:
+          type: string
+        description:
+          type: string
+        status:
+          type: boolean
+        created_at:
+          type: string
+        updated_at:
+          type: string
     GetTableResponse:
       type: object
       properties:
@@ -354,3 +364,7 @@ components:
             $ref: "#/components/schemas/TransactionTypeEntity"
         month_years:
           $ref: "#/components/schemas/GetConfigDatesResponse"
+        table_types:
+          type: array
+          items:
+            $ref: "#/components/schemas/TableTypeEntity"

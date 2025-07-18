@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/ssssshel/sp-api/src/domain/models"
+	"github.com/ssssshel/sp-api/src/domain/dtos"
 	"github.com/ssssshel/sp-api/src/presentation/http/handler"
 	usecases_user "github.com/ssssshel/sp-api/src/usecases/User"
 )
@@ -34,15 +34,12 @@ func (h *userHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	userIdStr := r.URL.Path[strings.LastIndex(r.URL.Path, "/")+1:]
 	userId, err := strconv.ParseUint(userIdStr, 10, 64)
 
-	var payload models.GetUserModel
-	payload.ID = userId
-
-	if err != nil || validator.New().Struct(payload) != nil {
-		handler.HandleHttpError(w, http.StatusBadRequest, errors.New("invalid request"))
+	if err != nil {
+		handler.HandleHttpError(w, http.StatusBadRequest, errors.New(err.Error()))
 		return
 	}
 
-	user, err := h.getUserByIdUsecase.Execute(payload.ID)
+	user, err := h.getUserByIdUsecase.Execute(userId)
 
 	if err != nil {
 		handler.HandleHttpError(w, http.StatusInternalServerError, err)
@@ -55,7 +52,7 @@ func (h *userHandler) GetById(w http.ResponseWriter, r *http.Request) {
 func (h *userHandler) Create(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
-	var payload models.CreateUserModel
+	var payload dtos.CreateUserDto
 
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
 		handler.HandleHttpError(w, http.StatusBadRequest, err)

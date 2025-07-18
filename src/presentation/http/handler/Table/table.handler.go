@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/ssssshel/sp-api/src/domain/models"
+	"github.com/ssssshel/sp-api/src/domain/dtos"
 	"github.com/ssssshel/sp-api/src/presentation/http/handler"
 	usecases_table "github.com/ssssshel/sp-api/src/usecases/Table"
 )
@@ -36,7 +36,7 @@ func NewTableHandler(createTableUsecase usecases_table.CreateTableUsecase, getTa
 func (h *tableHandler) Create(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
-	var payload models.CreateTableModel
+	var payload dtos.CreateTableDto
 
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
 		handler.HandleHttpError(w, http.StatusBadRequest, err)
@@ -62,15 +62,12 @@ func (h *tableHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	tableIdStr := r.URL.Path[strings.LastIndex(r.URL.Path, "/")+1:]
 	tableId, err := strconv.ParseUint(tableIdStr, 10, 64)
 
-	var payload models.GetTableByIdModel
-	payload.ID = tableId
-
-	if err != nil || validator.New().Struct(payload) != nil {
+	if err != nil {
 		handler.HandleHttpError(w, http.StatusBadRequest, errors.New("invalid request"))
 		return
 	}
 
-	table, err := h.getTableByIdUsecase.Execute(payload.ID)
+	table, err := h.getTableByIdUsecase.Execute(tableId)
 
 	if err != nil {
 		handler.HandleHttpError(w, http.StatusInternalServerError, err)
@@ -99,7 +96,7 @@ func (h *tableHandler) GetByParams(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	model := &models.GetTableByParamsModel{
+	model := &dtos.GetTableByParamsDto{
 		UserID:    userID,
 		TypeID:    typeID,
 		MonthYear: monthYear,

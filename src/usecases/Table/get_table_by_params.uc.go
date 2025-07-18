@@ -1,13 +1,13 @@
 package usecases_table
 
 import (
-	"github.com/ssssshel/sp-api/src/domain/models"
+	"github.com/ssssshel/sp-api/src/domain/dtos"
 	"github.com/ssssshel/sp-api/src/domain/repositories"
 	"github.com/ssssshel/sp-api/src/domain/responses"
 )
 
 type GetTableByParamsUsecase interface {
-	Execute(table *models.GetTableByParamsModel) (*responses.GetTableResponse, error)
+	Execute(table *dtos.GetTableByParamsDto) (*responses.GetTableResponse, error)
 }
 
 type getTableByParamsUsecase struct {
@@ -22,7 +22,7 @@ func NewGetTableByParamsUsecase(tableRepository repositories.TableRepository, tr
 	}
 }
 
-func (u *getTableByParamsUsecase) Execute(getTableModel *models.GetTableByParamsModel) (*responses.GetTableResponse, error) {
+func (u *getTableByParamsUsecase) Execute(getTableModel *dtos.GetTableByParamsDto) (*responses.GetTableResponse, error) {
 	table, err := u.tableRepository.GetTableByParams(getTableModel)
 	if err != nil {
 		return nil, err

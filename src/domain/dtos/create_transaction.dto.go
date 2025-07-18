@@ -1,6 +1,6 @@
-package models
+package dtos
 
-type CreateTransactionModel struct {
+type CreateTransactionDto struct {
 	Description string  `json:"description" validate:"required"`
 	TableID     uint64  `json:"table_id" validate:"required"`
 	TypeID      uint64  `json:"type_id" validate:"required"`

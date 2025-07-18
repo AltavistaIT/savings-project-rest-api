@@ -1,14 +1,14 @@
 package usecases_transaction
 
 import (
+	"github.com/ssssshel/sp-api/src/domain/dtos"
 	"github.com/ssssshel/sp-api/src/domain/entities"
-	"github.com/ssssshel/sp-api/src/domain/models"
 	"github.com/ssssshel/sp-api/src/domain/repositories"
 	"gorm.io/gorm"
 )
 
 type CreateTransactionUsecase interface {
-	Execute(transaction *models.CreateTransactionModel) (*entities.Transaction, error)
+	Execute(transaction *dtos.CreateTransactionDto) (*entities.Transaction, error)
 }
 
 type createTransactionUseCase struct {
@@ -44,7 +44,7 @@ func NewCreateTransactionUsecase(txRepository repositories.TransactionRepository
 //
 // If any error occurs during the above steps, it is returned. Otherwise, the newly created
 // transaction is returned.
-func (uc *createTransactionUseCase) Execute(transaction *models.CreateTransactionModel) (*entities.Transaction, error) {
+func (uc *createTransactionUseCase) Execute(transaction *dtos.CreateTransactionDto) (*entities.Transaction, error) {
 	var expectedPosition int
 	lastTxTable, err := uc.transactionTableRepository.GetLastTransactionTableByTableID(transaction.TableID)
 
@@ -77,7 +77,7 @@ func (uc *createTransactionUseCase) Execute(transaction *models.CreateTransactio
 		return nil, err
 	}
 
-	if _, err := uc.tableRepository.UpdateTableAmount(&models.UpdateTableAmountModel{
+	if _, err := uc.tableRepository.UpdateTableAmount(&dtos.UpdateTableAmountDto{
 		ID:     transaction.TableID,
 		Amount: transaction.Amount,
 	}); err != nil {

@@ -1,13 +1,13 @@
 package usecases_user
 
 import (
+	"github.com/ssssshel/sp-api/src/domain/dtos"
 	"github.com/ssssshel/sp-api/src/domain/entities"
-	"github.com/ssssshel/sp-api/src/domain/models"
 	"github.com/ssssshel/sp-api/src/domain/repositories"
 )
 
 type CreateUserUsecase interface {
-	Execute(createUserRequest *models.CreateUserModel) (*entities.User, error)
+	Execute(createUserRequest *dtos.CreateUserDto) (*entities.User, error)
 }
 
 type createUserUsecase struct {
@@ -20,7 +20,7 @@ func NewCreateUserUsecase(userRepository repositories.UserRepository) CreateUser
 	}
 }
 
-func (u *createUserUsecase) Execute(createUserRequest *models.CreateUserModel) (*entities.User, error) {
+func (u *createUserUsecase) Execute(createUserRequest *dtos.CreateUserDto) (*entities.User, error) {
 
 	userEntity := &entities.User{
 		Username: createUserRequest.Username,

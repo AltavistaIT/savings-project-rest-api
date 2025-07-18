@@ -8,4 +8,5 @@ type GetConfigResponse struct {
 	Currencies       []*entities.Currency        `json:"currencies"`
 	TransactionTypes []*entities.TransactionType `json:"transaction_types"`
 	MonthYears       *GetConfigDatesResponse     `json:"month_years"`
+	TableTypes       []*entities.TableType       `json:"table_types"`
 }

@@ -1,6 +1,6 @@
-package models
+package dtos
 
-type UpdateTableAmountModel struct {
+type UpdateTableAmountDto struct {
 	ID     uint64  `json:"id" validate:"required"`
 	Amount float64 `json:"amount" validate:"required"`
 }
