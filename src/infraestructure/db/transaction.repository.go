@@ -56,3 +56,7 @@ func (r *transactionRepository) UpdateTransaction(transaction *entities.Transact
 	return transaction, r.db.Model(transaction).Updates(transaction).Error
 
 }
+
+func (r *transactionRepository) DeleteTransaction(id uint64) error {
+	return r.db.Where("id = ?", id).Delete(&entities.Transaction{}).Error
+}

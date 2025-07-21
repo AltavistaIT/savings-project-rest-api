@@ -24,3 +24,7 @@ func (r *transactionTableRepository) GetLastTransactionTableByTableID(tableID ui
 func (r *transactionTableRepository) CreateTransactionTable(transactionTable *entities.TableTransaction) (*entities.TableTransaction, error) {
 	return transactionTable, r.db.Create(transactionTable).Error
 }
+
+func (r *transactionTableRepository) DeleteTransactionTableByTxID(txID uint64) error {
+	return r.db.Where("transaction_id = ?", txID).Delete(&entities.TableTransaction{}).Error
+}

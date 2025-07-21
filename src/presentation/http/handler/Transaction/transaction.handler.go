@@ -10,24 +10,26 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/ssssshel/sp-api/src/domain/dtos"
 	"github.com/ssssshel/sp-api/src/presentation/http/handler"
-	"github.com/ssssshel/sp-api/src/shared/logger"
 	usecases_transaction "github.com/ssssshel/sp-api/src/usecases/Transaction"
 )
 
 type TransactionHandler interface {
 	Create(w http.ResponseWriter, r *http.Request)
 	Update(w http.ResponseWriter, r *http.Request)
+	Delete(w http.ResponseWriter, r *http.Request)
 }
 
 type transactionHandler struct {
 	createTransactionUsecase usecases_transaction.CreateTransactionUsecase
 	updateTransactionUsecase usecases_transaction.UpdateTransactionUsecase
+	deleteTransactionUsecase usecases_transaction.DeleteTransactionUsecase
 }
 
-func NewTransactionHandler(createTransactionUsecase usecases_transaction.CreateTransactionUsecase, updateTransactionUsecase usecases_transaction.UpdateTransactionUsecase) TransactionHandler {
+func NewTransactionHandler(createTransactionUsecase usecases_transaction.CreateTransactionUsecase, updateTransactionUsecase usecases_transaction.UpdateTransactionUsecase, deleteTransactionUsecase usecases_transaction.DeleteTransactionUsecase) TransactionHandler {
 	return &transactionHandler{
 		createTransactionUsecase: createTransactionUsecase,
 		updateTransactionUsecase: updateTransactionUsecase,
+		deleteTransactionUsecase: deleteTransactionUsecase,
 	}
 }
 
@@ -80,7 +82,6 @@ func (h *transactionHandler) Update(w http.ResponseWriter, r *http.Request) {
 		handler.HandleHttpError(w, http.StatusBadRequest, err)
 		return
 	}
-	logger.Info("%+v", payload)
 	updatedTransaction, err := h.updateTransactionUsecase.Execute(&payload)
 
 	if err != nil {
@@ -89,4 +90,23 @@ func (h *transactionHandler) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	handler.HandleHttpSuccess(w, http.StatusOK, handler.HttpMessage[http.StatusOK], updatedTransaction)
+}
+
+func (h *transactionHandler) Delete(w http.ResponseWriter, r *http.Request) {
+	transactionIdStr := r.URL.Path[strings.LastIndex(r.URL.Path, "/")+1:]
+	transactionId, err := strconv.ParseUint(transactionIdStr, 10, 64)
+
+	if err != nil {
+		handler.HandleHttpError(w, http.StatusBadRequest, errors.New("invalid id"))
+		return
+	}
+
+	err = h.deleteTransactionUsecase.Execute(transactionId)
+
+	if err != nil {
+		handler.HandleHttpError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	handler.HandleHttpSuccess(w, http.StatusOK, handler.HttpMessage[http.StatusOK], nil)
 }
