@@ -51,3 +51,8 @@ func (r *transactionRepository) GetTransactionsByTableID(tableID uint64) ([]*agg
 func (r *transactionRepository) CreateTransaction(transaction *entities.Transaction) (*entities.Transaction, error) {
 	return transaction, r.db.Create(transaction).Error
 }
+
+func (r *transactionRepository) UpdateTransaction(transaction *entities.Transaction) (*entities.Transaction, error) {
+	return transaction, r.db.Model(transaction).Updates(transaction).Error
+
+}

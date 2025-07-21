@@ -11,14 +11,14 @@ type CreateTransactionUsecase interface {
 	Execute(transaction *dtos.CreateTransactionDto) (*entities.Transaction, error)
 }
 
-type createTransactionUseCase struct {
+type createTransactionUsecase struct {
 	transactionRepository      repositories.TransactionRepository
 	transactionTableRepository repositories.TransactionTableRepository
 	tableRepository            repositories.TableRepository
 }
 
 func NewCreateTransactionUsecase(txRepository repositories.TransactionRepository, txTableRepository repositories.TransactionTableRepository, tableRepository repositories.TableRepository) CreateTransactionUsecase {
-	return &createTransactionUseCase{
+	return &createTransactionUsecase{
 		transactionRepository:      txRepository,
 		transactionTableRepository: txTableRepository,
 		tableRepository:            tableRepository,
@@ -44,7 +44,7 @@ func NewCreateTransactionUsecase(txRepository repositories.TransactionRepository
 //
 // If any error occurs during the above steps, it is returned. Otherwise, the newly created
 // transaction is returned.
-func (uc *createTransactionUseCase) Execute(transaction *dtos.CreateTransactionDto) (*entities.Transaction, error) {
+func (uc *createTransactionUsecase) Execute(transaction *dtos.CreateTransactionDto) (*entities.Transaction, error) {
 	var expectedPosition int
 	lastTxTable, err := uc.transactionTableRepository.GetLastTransactionTableByTableID(transaction.TableID)
 
@@ -77,12 +77,12 @@ func (uc *createTransactionUseCase) Execute(transaction *dtos.CreateTransactionD
 		return nil, err
 	}
 
-	if _, err := uc.tableRepository.UpdateTableAmount(&dtos.UpdateTableAmountDto{
-		ID:     transaction.TableID,
-		Amount: transaction.Amount,
-	}); err != nil {
-		return nil, err
-	}
+	// if _, err := uc.tableRepository.UpdateTableAmount(&dtos.UpdateTableAmountDto{
+	// 	ID:     transaction.TableID,
+	// 	Amount: transaction.Amount,
+	// }); err != nil {
+	// 	return nil, err
+	// }
 
 	return createdTx, nil
 }

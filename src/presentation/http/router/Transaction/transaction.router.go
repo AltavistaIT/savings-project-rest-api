@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	infra_db "github.com/ssssshel/sp-api/src/infraestructure/db"
-	"github.com/ssssshel/sp-api/src/presentation/http/handler"
 	handler_transaction "github.com/ssssshel/sp-api/src/presentation/http/handler/Transaction"
 	"github.com/ssssshel/sp-api/src/shared"
 	usecases_transaction "github.com/ssssshel/sp-api/src/usecases/Transaction"
@@ -15,14 +14,14 @@ func TransactionRoutes(mux *http.ServeMux, container *shared.Container) {
 	transactionTableRepository := infra_db.NewTransactionTableRepository(container.DB.DBConn)
 	tableRepository := infra_db.NewTableRepository(container.DB.DBConn)
 	createTransactionUsecase := usecases_transaction.NewCreateTransactionUsecase(transacionRepository, transactionTableRepository, tableRepository)
-	transactionHandler := handler_transaction.NewTransactionHandler(createTransactionUsecase)
+	updateTransactionUsecase := usecases_transaction.NewUpdateTransactionUsease(transacionRepository)
+	transactionHandler := handler_transaction.NewTransactionHandler(createTransactionUsecase, updateTransactionUsecase)
 
-	mux.HandleFunc("/transactions", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case http.MethodPost:
-			transactionHandler.Create(w, r)
-		default:
-			handler.HandleHttpError(w, http.StatusMethodNotAllowed, nil)
-		}
+	mux.HandleFunc("POST /transactions", func(w http.ResponseWriter, r *http.Request) {
+		transactionHandler.Create(w, r)
+	})
+
+	mux.HandleFunc("PATCH /transactions/{id}", func(w http.ResponseWriter, r *http.Request) {
+		transactionHandler.Update(w, r)
 	})
 }

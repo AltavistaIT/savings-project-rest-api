@@ -53,6 +53,7 @@ func (r *tableRepository) CreateTable(table *entities.Table) (*entities.Table, e
 	return tableModel, nil
 }
 
+// TODO: Refactorizar para restas y optimizar o retirar
 func (r *tableRepository) UpdateTableAmount(table *dtos.UpdateTableAmountDto) (*entities.Table, error) {
 	var tableModel entities.Table
 	err := r.db.Model(&tableModel).
