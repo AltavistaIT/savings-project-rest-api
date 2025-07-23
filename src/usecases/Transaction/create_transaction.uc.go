@@ -63,6 +63,7 @@ func (uc *createTransactionUsecase) Execute(transaction *dtos.CreateTransactionD
 		TypeID:      transaction.TypeID,
 		Amount:      transaction.Amount,
 		CurrencyID:  transaction.CurrencyID,
+		Date:        transaction.Date,
 	})
 
 	if err != nil {

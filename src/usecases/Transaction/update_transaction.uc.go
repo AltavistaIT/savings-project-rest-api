@@ -27,6 +27,7 @@ func (u *updateTransactionUsecase) Execute(transaction *dtos.UpdateTransactionDt
 		Amount:      transaction.Amount,
 		TypeID:      transaction.TypeID,
 		Description: transaction.Description,
+		Date:        transaction.Date,
 	})
 
 	if err != nil {

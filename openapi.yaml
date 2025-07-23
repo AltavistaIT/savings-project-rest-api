@@ -233,6 +233,31 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      summary: Delete a transaction
+      tags:
+        - Transactions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Transaction deleted successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     CreateTableDto:
@@ -265,6 +290,8 @@ components:
           type: number
         currency_id:
           type: integer
+        date: 
+          type: string
     UpdateTransactionDto:
       type: object
       properties:
@@ -274,6 +301,8 @@ components:
           type: integer
         amount:
           type: number
+        date: 
+          type: string
     SuccessResponse:
       type: object
       properties:
@@ -341,6 +370,8 @@ components:
           type: integer
         amount:
           type: number
+        date:
+          type: string
         currency_id:
           type: integer
         status:

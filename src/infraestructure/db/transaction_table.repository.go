@@ -26,5 +26,11 @@ func (r *transactionTableRepository) CreateTransactionTable(transactionTable *en
 }
 
 func (r *transactionTableRepository) DeleteTransactionTableByTxID(txID uint64) error {
-	return r.db.Where("transaction_id = ?", txID).Delete(&entities.TableTransaction{}).Error
+	result := r.db.Where("transaction_id = ?", txID).Delete(&entities.TableTransaction{})
+
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+
+	return result.Error
 }

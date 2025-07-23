@@ -58,5 +58,11 @@ func (r *transactionRepository) UpdateTransaction(transaction *entities.Transact
 }
 
 func (r *transactionRepository) DeleteTransaction(id uint64) error {
-	return r.db.Where("id = ?", id).Delete(&entities.Transaction{}).Error
+	result := r.db.Where("id = ?", id).Delete(&entities.Transaction{})
+
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+
+	return result.Error
 }
