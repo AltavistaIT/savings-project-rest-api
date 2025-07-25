@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/ssssshel/sp-api/src/presentation/http/handler"
+	router_auth "github.com/ssssshel/sp-api/src/presentation/http/router/Auth"
 	router_config "github.com/ssssshel/sp-api/src/presentation/http/router/Config"
 	router_table "github.com/ssssshel/sp-api/src/presentation/http/router/Table"
 	router_transaction "github.com/ssssshel/sp-api/src/presentation/http/router/Transaction"
@@ -23,6 +24,7 @@ func InitRoutes(container *shared.Container) *http.ServeMux {
 	})
 
 	apiMux := http.NewServeMux()
+	router_auth.AuthRouter(apiMux, container)
 	router_config.ConfigRouter(apiMux, container)
 	router_table.TableRouter(apiMux, container)
 	router_transaction.TransactionRoutes(apiMux, container)

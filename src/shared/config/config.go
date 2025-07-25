@@ -15,6 +15,10 @@ type Config struct {
 	// Security
 	SecurityAllowedOrigins []string `mapstructure:"SECURITY_ALLOWED_ORIGINS"`
 
+	// JWT
+	JWTSecretKey string `mapstructure:"JWT_SECRET_KEY"`
+	JWTIssuer    string `mapstructure:"JWT_ISSUER"`
+
 	// Database
 	DBHost     string `mapstructure:"DB_HOST"`
 	DBPort     string `mapstructure:"DB_PORT"`

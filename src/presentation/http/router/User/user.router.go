@@ -11,13 +11,8 @@ import (
 
 func UserRoutes(mux *http.ServeMux, container *shared.Container) {
 	userRepository := infra_db.NewUserRepository(container.DB.DBConn)
-	createUserUsecase := usecases_user.NewCreateUserUsecase(userRepository)
 	getUserByIdUsecase := usecases_user.NewGetUserByIdUsecase(userRepository)
-	userHandler := handler_user.NewUserHandler(createUserUsecase, getUserByIdUsecase)
-
-	mux.HandleFunc("GET/users", func(w http.ResponseWriter, r *http.Request) {
-		userHandler.Create(w, r)
-	})
+	userHandler := handler_user.NewUserHandler(getUserByIdUsecase)
 
 	mux.HandleFunc("GET /users/", func(w http.ResponseWriter, r *http.Request) {
 		userHandler.GetById(w, r)
