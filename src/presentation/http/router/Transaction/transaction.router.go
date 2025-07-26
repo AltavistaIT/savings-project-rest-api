@@ -5,6 +5,7 @@ import (
 
 	infra_db "github.com/ssssshel/sp-api/src/infraestructure/db"
 	handler_transaction "github.com/ssssshel/sp-api/src/presentation/http/handler/Transaction"
+	middlewares "github.com/ssssshel/sp-api/src/presentation/http/middleware"
 	"github.com/ssssshel/sp-api/src/shared"
 	usecases_transaction "github.com/ssssshel/sp-api/src/usecases/Transaction"
 )
@@ -18,15 +19,11 @@ func TransactionRoutes(mux *http.ServeMux, container *shared.Container) {
 	deleteTransactionUscase := usecases_transaction.NewDeleteTransactionUsecase(transacionRepository, transactionTableRepository)
 	transactionHandler := handler_transaction.NewTransactionHandler(createTransactionUsecase, updateTransactionUsecase, deleteTransactionUscase)
 
-	mux.HandleFunc("POST /transactions", func(w http.ResponseWriter, r *http.Request) {
-		transactionHandler.Create(w, r)
-	})
+	auth := middlewares.NewAuthorizationMiddleware().Authorization
 
-	mux.HandleFunc("PATCH /transactions/{id}", func(w http.ResponseWriter, r *http.Request) {
-		transactionHandler.Update(w, r)
-	})
+	mux.Handle("POST /transactions", shared.Protect(auth, transactionHandler.Create))
 
-	mux.HandleFunc("DELETE /transactions/{id}", func(w http.ResponseWriter, r *http.Request) {
-		transactionHandler.Delete(w, r)
-	})
+	mux.Handle("PATCH /transactions/{id}", shared.Protect(auth, transactionHandler.Update))
+
+	mux.Handle("DELETE /transactions/{id}", shared.Protect(auth, transactionHandler.Delete))
 }

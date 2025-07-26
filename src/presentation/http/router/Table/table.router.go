@@ -5,6 +5,7 @@ import (
 
 	infra_db "github.com/ssssshel/sp-api/src/infraestructure/db"
 	handler_table "github.com/ssssshel/sp-api/src/presentation/http/handler/Table"
+	middlewares "github.com/ssssshel/sp-api/src/presentation/http/middleware"
 	"github.com/ssssshel/sp-api/src/shared"
 	usecases_table "github.com/ssssshel/sp-api/src/usecases/Table"
 )
@@ -17,15 +18,11 @@ func TableRouter(mux *http.ServeMux, container *shared.Container) {
 	createTableUsecase := usecases_table.NewCreateTableUsecase(tableRepository)
 	tableHandler := handler_table.NewTableHandler(createTableUsecase, getTableByIdUsecase, getTableByParamsUsecase)
 
-	mux.HandleFunc("POST /tables", func(w http.ResponseWriter, r *http.Request) {
-		tableHandler.Create(w, r)
-	})
+	auth := middlewares.NewAuthorizationMiddleware().Authorization
 
-	mux.HandleFunc("GET /tables", func(w http.ResponseWriter, r *http.Request) {
-		tableHandler.GetByParams(w, r)
-	})
+	mux.Handle("POST /tables", shared.Protect(auth, tableHandler.Create))
 
-	mux.HandleFunc("GET /tables/{id}", func(w http.ResponseWriter, r *http.Request) {
-		tableHandler.GetById(w, r)
-	})
+	mux.Handle("GET /tables", shared.Protect(auth, tableHandler.GetByParams))
+
+	mux.Handle("GET /tables/{id}", shared.Protect(auth, tableHandler.GetById))
 }

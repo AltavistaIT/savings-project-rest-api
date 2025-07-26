@@ -19,5 +19,5 @@ func Warn(format string, args ...interface{}) {
 }
 
 func Fatal(format string, args ...interface{}) {
-	log.Printf("[FATAL] "+format, args...)
+	log.Fatalf("[FATAL] "+format, args...)
 }

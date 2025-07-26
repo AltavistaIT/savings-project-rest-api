@@ -8,7 +8,6 @@ import (
 	router_config "github.com/ssssshel/sp-api/src/presentation/http/router/Config"
 	router_table "github.com/ssssshel/sp-api/src/presentation/http/router/Table"
 	router_transaction "github.com/ssssshel/sp-api/src/presentation/http/router/Transaction"
-	router_user "github.com/ssssshel/sp-api/src/presentation/http/router/User"
 	"github.com/ssssshel/sp-api/src/shared"
 )
 
@@ -28,7 +27,6 @@ func InitRoutes(container *shared.Container) *http.ServeMux {
 	router_config.ConfigRouter(apiMux, container)
 	router_table.TableRouter(apiMux, container)
 	router_transaction.TransactionRoutes(apiMux, container)
-	router_user.UserRoutes(apiMux, container)
 
 	mux.Handle("/api/", http.StripPrefix("/api", apiMux))
 
