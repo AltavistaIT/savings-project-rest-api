@@ -46,5 +46,10 @@ func (u *loginUsecase) Execute(payload *dtos.LoginDto) (*responses.LoginResponse
 		return nil, err
 	}
 
-	return &responses.LoginResponse{Token: token}, nil
+	return &responses.LoginResponse{
+		ID:    user.ID,
+		Name:  user.Name,
+		Email: user.Email,
+		Token: token,
+	}, nil
 }

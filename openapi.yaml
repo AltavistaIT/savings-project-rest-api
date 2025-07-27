@@ -499,6 +499,12 @@ components:
     LoginResponse:
       type: object
       properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
         token:
           type: string
     GetTableResponse:
