@@ -5,12 +5,13 @@ import (
 
 	"github.com/ssssshel/sp-api/src/domain/dtos"
 	"github.com/ssssshel/sp-api/src/domain/repositories"
+	"github.com/ssssshel/sp-api/src/domain/responses"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 type LoginUsecase interface {
-	Execute(payload *dtos.LoginDto) (string, error)
+	Execute(payload *dtos.LoginDto) (*responses.LoginResponse, error)
 }
 
 type loginUsecase struct {
@@ -25,25 +26,25 @@ func NewLoginUsecase(userRepository repositories.UserRepository, jwtUsecase JWTU
 	}
 }
 
-func (u *loginUsecase) Execute(payload *dtos.LoginDto) (string, error) {
+func (u *loginUsecase) Execute(payload *dtos.LoginDto) (*responses.LoginResponse, error) {
 	user, err := u.userRepository.GetUserByEmail(payload.Email)
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return "", errors.New("invalid credentials")
+			return nil, errors.New("invalid credentials")
 		}
-		return "", err
+		return nil, err
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(payload.Password))
 	if err != nil {
-		return "", errors.New("invalid credentials")
+		return nil, errors.New("invalid credentials")
 	}
 
 	token, err := u.jwtUsecase.GenerateToken(user.ID, user.Email)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return token, nil
+	return &responses.LoginResponse{Token: token}, nil
 }

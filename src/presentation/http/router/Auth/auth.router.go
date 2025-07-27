@@ -17,11 +17,11 @@ func AuthRouter(mux *http.ServeMux, container *shared.Container) {
 	registerUsecase := usecases_auth.NewRegisterUsecase(userRepository)
 	authHandler := handler_auth.NewAuthHandler(loginUsecase, registerUsecase)
 
-	mux.HandleFunc("POST /login", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("POST /auth/login", func(w http.ResponseWriter, r *http.Request) {
 		authHandler.Login(w, r)
 	})
 
-	mux.HandleFunc("POST /register", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("POST /auth/register", func(w http.ResponseWriter, r *http.Request) {
 		authHandler.Register(w, r)
 	})
 

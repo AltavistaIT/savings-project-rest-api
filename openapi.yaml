@@ -21,6 +21,72 @@ paths:
       responses:
         "200":
           description: Server is up and running
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterDto"
+      responses:
+        "200":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/login:
+      post:
+        tags:
+          - Auth
+        summary: Login
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginDto"
+        responses:
+          "200":
+            description: Login successful
+            content:
+              application/json:
+                schema:
+                  allOf:
+                    - $ref: "#/components/schemas/SuccessResponse"
+                    - type: object
+                      properties:
+                        data:
+                          $ref: "#/components/schemas/LoginResponse"
+          "400":
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/ErrorResponse"
+          "500":
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/ErrorResponse"
   /config:
     get:
       tags:
@@ -260,6 +326,24 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
+    RegisterDto:
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    LoginDto:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
     CreateTableDto:
       type: object
       properties:
@@ -411,6 +495,11 @@ components:
         created_at:
           type: string
         updated_at:
+          type: string
+    LoginResponse:
+      type: object
+      properties:
+        token:
           type: string
     GetTableResponse:
       type: object
