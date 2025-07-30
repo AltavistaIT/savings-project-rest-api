@@ -4,7 +4,6 @@ import (
 	"github.com/ssssshel/sp-api/src/domain/dtos"
 	"github.com/ssssshel/sp-api/src/domain/entities"
 	"github.com/ssssshel/sp-api/src/domain/repositories"
-	"gorm.io/gorm"
 )
 
 type CreateTransactionUsecase interface {
@@ -45,19 +44,6 @@ func NewCreateTransactionUsecase(txRepository repositories.TransactionRepository
 // If any error occurs during the above steps, it is returned. Otherwise, the newly created
 // transaction is returned.
 func (uc *createTransactionUsecase) Execute(transaction *dtos.CreateTransactionDto) (*entities.Transaction, error) {
-	var expectedPosition int
-	lastTxTable, err := uc.transactionTableRepository.GetLastTransactionTableByTableID(transaction.TableID)
-
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil, err
-	}
-
-	if lastTxTable != nil {
-		expectedPosition = lastTxTable.Position + 1
-	} else {
-		expectedPosition = 1
-	}
-
 	createdTx, err := uc.transactionRepository.CreateTransaction(&entities.Transaction{
 		Description: transaction.Description,
 		TypeID:      transaction.TypeID,
@@ -73,17 +59,9 @@ func (uc *createTransactionUsecase) Execute(transaction *dtos.CreateTransactionD
 	if _, err := uc.transactionTableRepository.CreateTransactionTable(&entities.TableTransaction{
 		TableID:       transaction.TableID,
 		TransactionID: createdTx.ID,
-		Position:      expectedPosition,
 	}); err != nil {
 		return nil, err
 	}
-
-	// if _, err := uc.tableRepository.UpdateTableAmount(&dtos.UpdateTableAmountDto{
-	// 	ID:     transaction.TableID,
-	// 	Amount: transaction.Amount,
-	// }); err != nil {
-	// 	return nil, err
-	// }
 
 	return createdTx, nil
 }

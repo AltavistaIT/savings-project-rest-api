@@ -8,7 +8,6 @@ type TableTransaction struct {
 	Table         *Table       `json:"table,omitempty" gorm:"foreignKey:TableID"`
 	TransactionID uint64       `json:"transaction_id" gorm:"not null"`
 	Transaction   *Transaction `json:"transaction,omitempty" gorm:"foreignKey:TransactionID"`
-	Position      int          `json:"position" gorm:"type:integer; not null"`
 
 	CreatedAt *time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
 	UpdatedAt *time.Time `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP"`

@@ -8,7 +8,6 @@ import (
 
 	"github.com/ssssshel/sp-api/src/presentation/http/handler"
 	"github.com/ssssshel/sp-api/src/shared/config"
-	"github.com/ssssshel/sp-api/src/shared/logger"
 	usecases_auth "github.com/ssssshel/sp-api/src/usecases/Auth"
 )
 
@@ -38,7 +37,6 @@ func (m *AuthorizationMiddleware) Authorization(next http.Handler) http.Handler 
 
 		tokenString := parts[1]
 		userID, err := m.jwtUsecase.ValidateToken(tokenString)
-		logger.Info("err: %v", err)
 		if err != nil {
 			handler.HandleHttpError(w, http.StatusUnauthorized, errors.New("unauthorized"))
 			return
