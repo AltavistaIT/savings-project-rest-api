@@ -16,11 +16,6 @@ func NewTransactionTableRepository(db *gorm.DB) repositories.TransactionTableRep
 	}
 }
 
-func (r *transactionTableRepository) GetLastTransactionTableByTableID(tableID uint64) (*entities.TableTransaction, error) {
-	var transactionTable entities.TableTransaction
-	return &transactionTable, r.db.Where("table_id = ?", tableID).Order("position DESC").First(&transactionTable).Error
-}
-
 func (r *transactionTableRepository) CreateTransactionTable(transactionTable *entities.TableTransaction) (*entities.TableTransaction, error) {
 	return transactionTable, r.db.Create(transactionTable).Error
 }
