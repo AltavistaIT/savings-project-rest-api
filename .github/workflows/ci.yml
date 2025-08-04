@@ -36,8 +36,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/savings-project-api--${{ github.event.inputs.environment }}:latest .
+      - name: Define tags
+        id: tags
+        run: |
+          SHORT_SHA=${GITHUB_SHA::7}
+          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/savings-project-api"
+          UNIQUE_TAG="${IMAGE_NAME}:${{ github.event.inputs.environment }}-${SHORT_SHA}"
+          LATEST_TAG="${IMAGE_NAME}:${{ github.event.inputs.environment }}-latest"
+          echo "UNIQUE_TAG=$UNIQUE_TAG" >> $GITHUB_ENV
+          echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
+          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -45,5 +53,14 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Push Docker image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/savings-project-api--${{ github.event.inputs.environment }}:latest
+      - name: Build Docker image
+        run: docker build -t ${{ env.UNIQUE_TAG }} .
+
+      - name: Tag image as -latest for the environment
+        run: docker tag ${{ env.UNIQUE_TAG }} ${{ env.LATEST_TAG }}
+
+      - name: Push versioned image
+        run: docker push ${{ env.UNIQUE_TAG }}
+
+      - name: Push -latest tag
+        run: docker push ${{ env.LATEST_TAG }}
