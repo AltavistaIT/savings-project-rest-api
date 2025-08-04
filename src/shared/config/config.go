@@ -1,6 +1,7 @@
 package config
 
 import (
+	"reflect"
 	"sync"
 
 	"github.com/spf13/viper"
@@ -43,12 +44,11 @@ func GetConfig() *Config {
 
 		viper.AutomaticEnv()
 
-		// t := reflect.TypeOf(Config{})
-		// for i := 0; i < t.NumField(); i++ {
-		// 	key := t.Field(i).Tag.Get("mapstructure")
-		// 	_ = viper.BindEnv(key)
-		// 	logger.Info("🔍 %s = %v", key, viper.Get(key))
-		// }
+		t := reflect.TypeOf(Config{})
+		for i := 0; i < t.NumField(); i++ {
+			key := t.Field(i).Tag.Get("mapstructure")
+			_ = viper.BindEnv(key)
+		}
 
 		config = &Config{}
 		err := viper.Unmarshal(config)
