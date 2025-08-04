@@ -1,7 +1,6 @@
 package config
 
 import (
-	"reflect"
 	"sync"
 
 	"github.com/spf13/viper"
@@ -39,25 +38,23 @@ func GetConfig() *Config {
 		viper.AddConfigPath(".")
 
 		if err := viper.ReadInConfig(); err != nil {
-			logger.Warn("No se pudo leer el archivo .env: ", err)
+			logger.Warn("Could not read config: ", err)
 		}
 
 		viper.AutomaticEnv()
 
-		t := reflect.TypeOf(Config{})
-		for i := 0; i < t.NumField(); i++ {
-			key := t.Field(i).Tag.Get("mapstructure")
-			_ = viper.BindEnv(key)
-			logger.Info("🔍 %s = %v", key, viper.Get(key))
-		}
+		// t := reflect.TypeOf(Config{})
+		// for i := 0; i < t.NumField(); i++ {
+		// 	key := t.Field(i).Tag.Get("mapstructure")
+		// 	_ = viper.BindEnv(key)
+		// 	logger.Info("🔍 %s = %v", key, viper.Get(key))
+		// }
 
 		config = &Config{}
 		err := viper.Unmarshal(config)
 		if err != nil {
-			logger.Fatal("Error al cargar la configuración: ", err)
+			logger.Fatal("Unable to decode config: ", err)
 		}
-
-		logger.Info("✅ Config cargada: %+v", config)
 	})
 	return config
 }

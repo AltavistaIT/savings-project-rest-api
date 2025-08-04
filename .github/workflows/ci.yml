@@ -1,4 +1,4 @@
-name: Build and push Docker image
+name: Deploy
 
 on:
   workflow_dispatch:
@@ -15,6 +15,7 @@ on:
 
 jobs:
   build-and-push:
+    name: Deploy to ${{ inputs.environment }}
     runs-on: ubuntu-latest
 
     steps:
@@ -39,13 +40,9 @@ jobs:
       - name: Define tags
         id: tags
         run: |
-          SHORT_SHA=${GITHUB_SHA::7}
           IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/savings-project-api"
-          UNIQUE_TAG="${IMAGE_NAME}:${{ github.event.inputs.environment }}-${SHORT_SHA}"
           LATEST_TAG="${IMAGE_NAME}:${{ github.event.inputs.environment }}-latest"
-          echo "UNIQUE_TAG=$UNIQUE_TAG" >> $GITHUB_ENV
           echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
-          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -54,13 +51,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t ${{ env.UNIQUE_TAG }} .
-
-      - name: Tag image as -latest for the environment
-        run: docker tag ${{ env.UNIQUE_TAG }} ${{ env.LATEST_TAG }}
-
-      - name: Push versioned image
-        run: docker push ${{ env.UNIQUE_TAG }}
+        run: docker build -t ${{ env.LATEST_TAG }} .
 
       - name: Push -latest tag
         run: docker push ${{ env.LATEST_TAG }}
