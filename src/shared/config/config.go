@@ -36,23 +36,25 @@ var (
 func GetConfig() *Config {
 	once.Do(func() {
 		viper.SetConfigFile(".env")
-		viper.AddConfigPath(".") // Si ejecutas desde raíz del proyecto
+		viper.AddConfigPath(".")
+
 		if err := viper.ReadInConfig(); err != nil {
-			logger.Fatal("❌ No se pudo leer el archivo .env: ", err)
+			logger.Warn("No se pudo leer el archivo .env: ", err)
 		}
+
 		viper.AutomaticEnv()
 
 		t := reflect.TypeOf(Config{})
 		for i := 0; i < t.NumField(); i++ {
 			key := t.Field(i).Tag.Get("mapstructure")
 			_ = viper.BindEnv(key)
-			logger.Info("🔍 %s = %v", key, viper.Get(key)) // debug opcional
+			logger.Info("🔍 %s = %v", key, viper.Get(key))
 		}
 
 		config = &Config{}
 		err := viper.Unmarshal(config)
 		if err != nil {
-			panic(err)
+			logger.Fatal("Error al cargar la configuración: ", err)
 		}
 
 		logger.Info("✅ Config cargada: %+v", config)
