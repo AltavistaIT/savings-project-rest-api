@@ -9,7 +9,7 @@ on:
         default: "production"
         type: choice
         options:
-          - development
+          - qa
           - staging
           - production
 
@@ -37,7 +37,7 @@ jobs:
             ${{ runner.os }}-go-
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/savings-project-api:${{ github.event.inputs.environment }} .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/savings-project-api--{{ github.event.inputs.environment }}:latest .
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -46,4 +46,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push Docker image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/savings-project-api:${{ github.event.inputs.environment }}
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/savings-project-api--${{ github.event.inputs.environment }}:latest
