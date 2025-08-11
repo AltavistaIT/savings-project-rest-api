@@ -13,16 +13,13 @@ import (
 func TableRouter(mux *http.ServeMux, container *shared.Container) {
 	tableRepository := infra_db.NewTableRepository(container.DB.DBConn)
 	transactionRepository := infra_db.NewTransactionRepository(container.DB.DBConn)
-	getTableByIdUsecase := usecases_table.NewGetTableByIdUsecase(tableRepository, transactionRepository)
 	getTableByParamsUsecase := usecases_table.NewGetTableByParamsUsecase(tableRepository, transactionRepository)
 	createTableUsecase := usecases_table.NewCreateTableUsecase(tableRepository)
-	tableHandler := handler_table.NewTableHandler(createTableUsecase, getTableByIdUsecase, getTableByParamsUsecase)
+	tableHandler := handler_table.NewTableHandler(createTableUsecase, getTableByParamsUsecase)
 
 	auth := middlewares.NewAuthorizationMiddleware().Authorization
 
 	mux.Handle("POST /tables", shared.Protect(auth, tableHandler.Create))
 
 	mux.Handle("GET /tables", shared.Protect(auth, tableHandler.GetByParams))
-
-	mux.Handle("GET /tables/{id}", shared.Protect(auth, tableHandler.GetById))
 }

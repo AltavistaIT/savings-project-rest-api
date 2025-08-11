@@ -1,9 +1,13 @@
 package usecases_transaction
 
-import "github.com/ssssshel/sp-api/src/domain/repositories"
+import (
+	"errors"
+
+	"github.com/ssssshel/sp-api/src/domain/repositories"
+)
 
 type DeleteTransactionUsecase interface {
-	Execute(id uint64) error
+	Execute(txId, tableId uint64) error
 }
 
 type deleteTransactionUsecase struct {
@@ -18,12 +22,22 @@ func NewDeleteTransactionUsecase(transactionRepository repositories.TransactionR
 	}
 }
 
-func (u *deleteTransactionUsecase) Execute(id uint64) error {
-	err := u.transactionTableRepository.DeleteTransactionTableByTxID(id)
+func (u *deleteTransactionUsecase) Execute(transactionID, userID uint64) error {
+	// Validate tx belongs to user
+	txTable, err := u.transactionTableRepository.GetTransactionTableByTxID(transactionID)
+	if err != nil {
+		return err
+	}
+
+	if txTable.Table.UserID != userID {
+		return errors.New("forbidden")
+	}
+
+	err = u.transactionTableRepository.DeleteTransactionTableByTxID(transactionID)
 
 	if err != nil {
 		return err
 	}
 
-	return u.transactionRepository.DeleteTransaction(id)
+	return u.transactionRepository.DeleteTransaction(transactionID)
 }

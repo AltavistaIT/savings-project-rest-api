@@ -15,7 +15,7 @@ func TransactionRoutes(mux *http.ServeMux, container *shared.Container) {
 	transactionTableRepository := infra_db.NewTransactionTableRepository(container.DB.DBConn)
 	tableRepository := infra_db.NewTableRepository(container.DB.DBConn)
 	createTransactionUsecase := usecases_transaction.NewCreateTransactionUsecase(transacionRepository, transactionTableRepository, tableRepository)
-	updateTransactionUsecase := usecases_transaction.NewUpdateTransactionUsease(transacionRepository)
+	updateTransactionUsecase := usecases_transaction.NewUpdateTransactionUsease(transacionRepository, tableRepository)
 	deleteTransactionUscase := usecases_transaction.NewDeleteTransactionUsecase(transacionRepository, transactionTableRepository)
 	transactionHandler := handler_transaction.NewTransactionHandler(createTransactionUsecase, updateTransactionUsecase, deleteTransactionUscase)
 

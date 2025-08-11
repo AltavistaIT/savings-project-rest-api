@@ -5,7 +5,6 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/ssssshel/sp-api/src/domain/dtos"
@@ -15,20 +14,17 @@ import (
 
 type TableHandler interface {
 	Create(w http.ResponseWriter, r *http.Request)
-	GetById(w http.ResponseWriter, r *http.Request)
 	GetByParams(w http.ResponseWriter, r *http.Request)
 }
 
 type tableHandler struct {
 	createTableUsecase      usecases_table.CreateTableUsecase
-	getTableByIdUsecase     usecases_table.GetTableByIdUsecase
 	getTableByParamsUsecase usecases_table.GetTableByParamsUsecase
 }
 
-func NewTableHandler(createTableUsecase usecases_table.CreateTableUsecase, getTableByIdUsecase usecases_table.GetTableByIdUsecase, getTableByParamsUsecase usecases_table.GetTableByParamsUsecase) TableHandler {
+func NewTableHandler(createTableUsecase usecases_table.CreateTableUsecase, getTableByParamsUsecase usecases_table.GetTableByParamsUsecase) TableHandler {
 	return &tableHandler{
 		createTableUsecase:      createTableUsecase,
-		getTableByIdUsecase:     getTableByIdUsecase,
 		getTableByParamsUsecase: getTableByParamsUsecase,
 	}
 }
@@ -48,6 +44,13 @@ func (h *tableHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Validate table belongs to user
+	userID := r.Context().Value("user_id")
+	if userID != payload.UserID {
+		handler.HandleHttpError(w, http.StatusForbidden, errors.New("forbidden"))
+		return
+	}
+
 	createdTable, err := h.createTableUsecase.Execute(&payload)
 
 	if err != nil {
@@ -56,25 +59,6 @@ func (h *tableHandler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	handler.HandleHttpSuccess(w, http.StatusCreated, handler.HttpMessage[http.StatusCreated], createdTable)
-}
-
-func (h *tableHandler) GetById(w http.ResponseWriter, r *http.Request) {
-	tableIdStr := r.URL.Path[strings.LastIndex(r.URL.Path, "/")+1:]
-	tableId, err := strconv.ParseUint(tableIdStr, 10, 64)
-
-	if err != nil {
-		handler.HandleHttpError(w, http.StatusBadRequest, errors.New("invalid request"))
-		return
-	}
-
-	table, err := h.getTableByIdUsecase.Execute(tableId)
-
-	if err != nil {
-		handler.HandleHttpError(w, http.StatusInternalServerError, err)
-		return
-	}
-
-	handler.HandleHttpSuccess(w, http.StatusOK, handler.HttpMessage[http.StatusOK], table)
 }
 
 func (h *tableHandler) GetByParams(w http.ResponseWriter, r *http.Request) {
@@ -87,6 +71,13 @@ func (h *tableHandler) GetByParams(w http.ResponseWriter, r *http.Request) {
 	userID, err := strconv.ParseUint(userIDStr, 10, 64)
 	if err != nil {
 		handler.HandleHttpError(w, http.StatusBadRequest, errors.New("invalid user_id"))
+		return
+	}
+
+	// Validate table belongs to user
+	userIDCtx := r.Context().Value("user_id")
+	if userIDCtx != userID {
+		handler.HandleHttpError(w, http.StatusForbidden, errors.New("forbidden"))
 		return
 	}
 

@@ -187,42 +187,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /tables/{id}:
-    get:
-      tags:
-        - Tables
-      summary: Get table by id
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Table found
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/SuccessResponse"
-                  - type: object
-                    properties:
-                      data:
-                        $ref: "#/components/schemas/GetTableResponse"
-        "404":
-          description: Table not found
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/ErrorResponse"
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
   /transactions:
     post:
       summary: Create a new transaction
@@ -379,6 +343,8 @@ components:
     UpdateTransactionDto:
       type: object
       properties:
+        id:
+          type: integer
         description:
           type: string
         type_id:
@@ -387,6 +353,10 @@ components:
           type: number
         date: 
           type: string
+        table_id:
+          type: integer
+        user_id:
+          type: integer
     SuccessResponse:
       type: object
       properties:

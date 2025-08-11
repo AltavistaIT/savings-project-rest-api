@@ -9,4 +9,6 @@ type CreateTransactionDto struct {
 	Amount      float64   `json:"amount" validate:"required"`
 	Date        time.Time `json:"date" validate:"required"`
 	CurrencyID  uint64    `json:"currency_id" validate:"required"`
+
+	UserID uint64 `json:"user_id"`
 }

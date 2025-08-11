@@ -1,6 +1,8 @@
 package usecases_transaction
 
 import (
+	"errors"
+
 	"github.com/ssssshel/sp-api/src/domain/dtos"
 	"github.com/ssssshel/sp-api/src/domain/entities"
 	"github.com/ssssshel/sp-api/src/domain/repositories"
@@ -25,6 +27,16 @@ func NewCreateTransactionUsecase(txRepository repositories.TransactionRepository
 }
 
 func (uc *createTransactionUsecase) Execute(transaction *dtos.CreateTransactionDto) (*entities.Transaction, error) {
+	// Validate tx belongs to user
+	table, err := uc.tableRepository.GetTableById(transaction.TableID)
+	if err != nil {
+		return nil, err
+	}
+
+	if table.UserID != transaction.UserID {
+		return nil, errors.New("forbidden")
+	}
+
 	createdTx, err := uc.transactionRepository.CreateTransaction(&entities.Transaction{
 		Description: transaction.Description,
 		TypeID:      transaction.TypeID,

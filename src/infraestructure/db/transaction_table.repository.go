@@ -29,3 +29,9 @@ func (r *transactionTableRepository) DeleteTransactionTableByTxID(txID uint64) e
 
 	return result.Error
 }
+
+func (r *transactionTableRepository) GetTransactionTableByTxID(txID uint64) (*entities.TableTransaction, error) {
+	var transactionTable entities.TableTransaction
+	err := r.db.Where("transaction_id = ?", txID).Preload("Table").First(&transactionTable).Error
+	return &transactionTable, err
+}

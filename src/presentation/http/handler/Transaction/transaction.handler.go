@@ -48,6 +48,16 @@ func (h *transactionHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	val := r.Context().Value("user_id")
+	userID, ok := val.(uint64)
+
+	if !ok {
+		handler.HandleHttpError(w, http.StatusBadRequest, errors.New("invalid user_id"))
+		return
+	}
+
+	payload.UserID = userID
+
 	createdTransaction, err := h.createTransactionUsecase.Execute(&payload)
 
 	if err != nil {
@@ -82,6 +92,17 @@ func (h *transactionHandler) Update(w http.ResponseWriter, r *http.Request) {
 		handler.HandleHttpError(w, http.StatusBadRequest, err)
 		return
 	}
+
+	val := r.Context().Value("user_id")
+	userID, ok := val.(uint64)
+
+	if !ok {
+		handler.HandleHttpError(w, http.StatusBadRequest, errors.New("invalid user_id"))
+		return
+	}
+
+	payload.UserID = userID
+
 	updatedTransaction, err := h.updateTransactionUsecase.Execute(&payload)
 
 	if err != nil {
@@ -101,7 +122,15 @@ func (h *transactionHandler) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.deleteTransactionUsecase.Execute(transactionId)
+	val := r.Context().Value("user_id")
+	userID, ok := val.(uint64)
+
+	if !ok {
+		handler.HandleHttpError(w, http.StatusBadRequest, errors.New("invalid user_id"))
+		return
+	}
+
+	err = h.deleteTransactionUsecase.Execute(transactionId, userID)
 
 	if err != nil {
 		handler.HandleHttpError(w, http.StatusInternalServerError, err)

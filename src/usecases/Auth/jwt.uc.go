@@ -28,7 +28,7 @@ func (u *jwtUsecase) GenerateToken(userId uint64, email string) (string, error) 
 		"sub":   userId,
 		"email": email,
 		"iss":   u.issuer,
-		"exp":   time.Now().Add(time.Hour * 24).Unix(),
+		"exp":   time.Now().Add(time.Hour * 1).Unix(),
 		"iat":   time.Now().Unix(),
 		"nbf":   time.Now().Unix(),
 	}

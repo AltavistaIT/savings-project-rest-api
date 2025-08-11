@@ -8,4 +8,7 @@ type UpdateTransactionDto struct {
 	Amount      float64   `json:"amount" validate:""`
 	Date        time.Time `json:"date" validate:"required"`
 	Description string    `json:"description" validate:""`
+	TableID     uint64    `json:"table_id" validate:"required"`
+
+	UserID uint64 `json:"user_id"`
 }
