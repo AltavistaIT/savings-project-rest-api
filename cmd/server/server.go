@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	infra_db "github.com/ssssshel/sp-api/src/infraestructure/db"
-	"github.com/ssssshel/sp-api/src/infraestructure/db/migrations"
 	infra_redis "github.com/ssssshel/sp-api/src/infraestructure/redis"
 	middlewares "github.com/ssssshel/sp-api/src/presentation/http/middleware"
 	"github.com/ssssshel/sp-api/src/presentation/http/router"
@@ -38,7 +37,7 @@ func (s *server) Start() {
 		logger.Fatal("Error connecting to redis => ", err)
 	}
 
-	migrations.MigrateDB(dbConnections)
+	// migrations.MigrateDB(dbConnections)
 
 	container := &shared.Container{
 		DB:    dbConnections,

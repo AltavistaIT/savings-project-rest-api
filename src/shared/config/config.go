@@ -53,7 +53,6 @@ func GetConfig() *Config {
 		for i := 0; i < t.NumField(); i++ {
 			key := t.Field(i).Tag.Get("mapstructure")
 			_ = viper.BindEnv(key)
-			logger.Info("Config: ", key, " => ", viper.Get(key))
 		}
 
 		config = &Config{}
