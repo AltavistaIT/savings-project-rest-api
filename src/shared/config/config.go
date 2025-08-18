@@ -26,6 +26,11 @@ type Config struct {
 	DBPassword string `mapstructure:"DB_PASSWORD"`
 	DBName     string `mapstructure:"DB_NAME"`
 	DBSchema   string `mapstructure:"DB_SCHEMA"`
+
+	// Redis
+	RedisAddr     string `mapstructure:"REDIS_ADDR"`
+	RedisPassword string `mapstructure:"REDIS_PASSWORD"`
+	RedisDB       int    `mapstructure:"REDIS_DB"`
 }
 
 var (
@@ -48,6 +53,7 @@ func GetConfig() *Config {
 		for i := 0; i < t.NumField(); i++ {
 			key := t.Field(i).Tag.Get("mapstructure")
 			_ = viper.BindEnv(key)
+			logger.Info("Config: ", key, " => ", viper.Get(key))
 		}
 
 		config = &Config{}
